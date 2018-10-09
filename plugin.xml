@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-firebase-core" version="0.0.2" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+  <name>cordova-firebase-core</name>
+  <js-module name="cordova-firebase-core" src="www/cordova-firebase-core.js">
+    <clobbers target="plugin.firebase.core"/>
+  </js-module>
+  <js-module name="Common" src="www/common.js" />
+  <js-module name="BaseClass" src="www/BaseClass.js" />
+  <js-module name="BaseArrayClass" src="www/BaseArrayClass.js" />
+  <js-module name="LZString" src="www/lz-string.js" />
+  <js-module name="App" src="www/App.js" />
+  <js-module name="FirebaseCoreCommandQueue" src="www/firebase-core-command-queue.js" />
+
+  <platform name="browser">
+    <js-module name="CordovaFirebaseCore" src="src/browser/CordovaFirebaseCore.js">
+      <runs/>
+    </js-module>
+    <js-module name="FirebaseAppPlugin" src="src/browser/FirebaseAppPlugin.js" />
+  </platform>
+
+  <platform name="android">
+    <framework src="com.google.firebase:firebase-core:+"/>
+    <dependency id="cordova-support-google-services" />
+  </platform>
+
+  <platform name="ios">
+    <framework src="Firebase/Core" type="podspec" spec=""/>
+    <framework src="LZCompression" type="podspec" spec=""/>
+
+    <config-file parent="/*" target="config.xml">
+      <feature name="CordovaFirebaseApp">
+        <param name="ios-package" value="CordovaFirebaseApp"/>
+      </feature>
+      <feature name="FirebaseAppPlugin">
+        <param name="ios-package" value="FirebaseAppPlugin"/>
+      </feature>
+    </config-file>
+
+    <header-file src="src/ios/CordovaFirebaseCore.h"/>
+    <source-file src="src/ios/CordovaFirebaseCore.m"/>
+    <header-file src="src/ios/FirebaseAppPlugin.h"/>
+    <source-file src="src/ios/FirebaseAppPlugin.m"/>
+  </platform>
+
+</plugin>
