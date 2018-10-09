@@ -5,6 +5,7 @@
 
 ## Supported platforms
   This plugin supports the following platforms:
+  
     - Browser (implemented, not tested deeply)
     - iOS (implemented, not tested deeply)
 
