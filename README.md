@@ -1,5 +1,7 @@
 ![](https://travis-ci.org/cordova-firebase-sdk/cordova-firebase-core.svg?branch=master)
 
+**THIS PLUGIN IS NOT READY TO SHIP. DO NOT USE THIS PLUGIN IN YOUR APP YET.**
+
 # cordova-firebase-core
 
 

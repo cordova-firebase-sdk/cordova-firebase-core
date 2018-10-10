@@ -9,7 +9,6 @@
 var utils = require('cordova/utils'),
   common = require('./Common'),
   BaseClass = require('./BaseClass'),
-  BaseArrayClass = require('./BaseArrayClass'),
   execCmd = require('./FirebaseCoreCommandQueue');
 
 /*******************************************************************************
@@ -18,8 +17,7 @@ var utils = require('cordova/utils'),
 function App(options, name) {
   BaseClass.call(this);
 
-  var self = this,
-    cmdQueue = new BaseArrayClass();
+  var self = this;
 
   Object.defineProperty(self, 'options', {
     value: options
@@ -44,31 +42,11 @@ function App(options, name) {
     enumerable: false
   });
 
-  cmdQueue._on('insert_at', function() {
-    if (!self._isReady) return;
-
-    var cmd;
-    while(cmdQueue.getLength() > 0) {
-      cmd = cmdQueue.removeAt(0, true);
-      if (cmd && cmd.target && cmd.args) {
-
-        execCmd.apply(cmd.target, cmd.args);
-      }
-    }
-  });
-
-  Object.defineProperty(self, '_cmdQueue', {
-    value: cmdQueue,
-    writable: false,
-    enumerable: false
-  });
-
-
   execCmd.call({
     '_isReady': true
   }, function() {
     self._isReady = true;
-    self._cmdQueue._trigger('insert_at');
+    self._trigger('ready');
   }, function(error) {
     if (error instanceof Error) {
       throw error;
@@ -86,27 +64,27 @@ function App(options, name) {
 
 utils.extend(App, BaseClass);
 
-Object.defineProperty(App.prototype, '_exec', {
-  value: function() {
-    this._cmdQueue.push.call(this._cmdQueue, {
-      target: this,
-      args: Array.prototype.slice.call(arguments, 0)
-    });
-  },
-  writable: false,
-  enumerable: false
-});
 
 //---------------------------------------------------------------------------------
 // App.database
 // https://firebase.google.com/docs/reference/js/firebase.app.App#database
 //---------------------------------------------------------------------------------
 App.prototype.database = function(url) {
+  var self = this;
   if (common.isInitialized('plugin.firebase.database._DBs')) {
-    var CordovaFirebaseDatabase = require('cordova-firebase-database/CordovaFirebaseDatabase');
+    var CordovaFirebaseDatabase = require('cordova-firebase-database.cordova-firebase-database');
     var options = utils.clone(this.options);
-    options.databaseURL = url;
-    var db = new CordovaFirebaseDatabase(options, this.name);
+    if (url) {
+      options.databaseURL = url;
+    }
+    var db = new CordovaFirebaseDatabase(self.id, options);
+    if (self._isReady) {
+      db._trigger('fireAppReady');
+    } else {
+      self._on('ready', function() {
+        db._trigger.call(db, 'fireAppReady');
+      });
+    }
     window.plugin.firebase.database._DBs[db.id] = db;
     return db;
   } else {

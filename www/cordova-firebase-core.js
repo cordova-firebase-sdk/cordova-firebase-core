@@ -10,7 +10,7 @@ function initializeApp(options, name) {
   }
   name = name || '[DEFAULT]';
   var app = new App(options, name);
-  window.plugin.firebase.app[app.id] = app;
+  window.plugin.firebase.app._APPs[app.id] = app;
   return app;
 }
 
@@ -28,8 +28,7 @@ cordova.addConstructor(function() {
   window.plugin.firebase.app = window.plugin.firebase.app || {};
 
   Object.defineProperty(window.plugin.firebase.app, '_APPs', {
-    value: {},
-    enumerable: false
+    value: {}
   });
 
   Object.defineProperty(window.plugin.firebase.app, 'WEBJS_SDK_VERSION', {

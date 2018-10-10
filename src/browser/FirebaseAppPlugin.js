@@ -18,6 +18,7 @@ function FirebaseAppPlugin(id, app) {
   Object.defineProperty(self, 'app', {
     value: app
   });
+
 }
 
 utils.extend(FirebaseAppPlugin, BaseClass);
