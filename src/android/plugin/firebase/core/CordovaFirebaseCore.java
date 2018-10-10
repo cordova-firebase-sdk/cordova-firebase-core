@@ -40,7 +40,7 @@ public class CordovaFirebaseCore extends CordovaPlugin {
     @Override
     protected void pluginInitialize() {
         this.context = cordova.getContext();
-        this.handlers.put("newInstance", new newInstance());
+        this.handlers.put("newInstance", new NewInstance());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class CordovaFirebaseCore extends CordovaPlugin {
         }
     }
 
-    private class newInstance implements IActionHandler {
+    private class NewInstance implements IActionHandler {
 
         @Override
         public void handle(JSONArray args, CallbackContext callbackContext) throws JSONException {

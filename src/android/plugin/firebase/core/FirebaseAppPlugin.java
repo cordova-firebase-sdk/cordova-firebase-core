@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class FirebaseAppPlugin extends CordovaPlugin {
 
-  private FirebaseApp app;
+  public FirebaseApp app;
   private Map<String, IActionHandler> handlers = new Hashtable<>();
   private Context context;
 
