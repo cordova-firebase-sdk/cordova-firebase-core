@@ -3,10 +3,11 @@
 @import Firebase;
 #import "FirebaseAppPlugin.h"
 
-#ifndef CordovaFirebaseApp_h
-#define CordovaFirebaseApp_h
+#ifndef CordovaFirebaseCore_h
+#define CordovaFirebaseCore_h
 
-@interface CordovaFirebaseApp : CDVPlugin
+@interface CordovaFirebaseCore : CDVPlugin
+@property (strong, atomic) NSMutableDictionary *apps;
 
 - (void)newInstance:(CDVInvokedUrlCommand*)command;
 @end

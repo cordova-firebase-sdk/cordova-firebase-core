@@ -28,8 +28,8 @@
     <framework src="LZCompression" type="podspec" spec=""/>
 
     <config-file parent="/*" target="config.xml">
-      <feature name="CordovaFirebaseApp">
-        <param name="ios-package" value="CordovaFirebaseApp"/>
+      <feature name="CordovaFirebaseCore">
+        <param name="ios-package" value="CordovaFirebaseCore"/>
       </feature>
       <feature name="FirebaseAppPlugin">
         <param name="ios-package" value="FirebaseAppPlugin"/>

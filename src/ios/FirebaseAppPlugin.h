@@ -3,15 +3,16 @@
 @import Firebase;
 #import <NSString+LZCompression.h>
 
-#ifndef FirebaseDatabasePlugin_h
-#define FirebaseDatabasePlugin_h
+#ifndef FirebaseAppPlugin_h
+#define FirebaseAppPlugin_h
 
 @interface FirebaseAppPlugin : CDVPlugin
 
 @property (strong, nonatomic) NSString *pluginId;
 @property (strong, atomic) NSMutableDictionary *objects;
+@property (strong, atomic) FIRApp *app;
 
-- (void)pluginInitializeWithFIRDatabase:(FIRDatabase*)databaseRef andPluginId:(NSString *)pluginId;
+- (void)initWithOptions:(NSDictionary*)options;
 
 - (void)delete:(CDVInvokedUrlCommand*)command;
 @end

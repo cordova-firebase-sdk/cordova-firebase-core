@@ -1,21 +1,19 @@
-#import "CordovaFirebaseApp.h"
+#import "CordovaFirebaseCore.h"
 
-@implementation CordovaFirebaseApp
+@implementation CordovaFirebaseCore
 - (void)pluginInitialize
 {
-
+  self.apps = [NSMutableDictionary dictionary];
+  
 }
 - (void)newInstance:(CDVInvokedUrlCommand*)command
 {
 
   NSDictionary *params = [command.arguments objectAtIndex:0];
-  NSString *instanceId = [options objectForKey:@"id"];
-  NSString *name = [options objectForKey:@"name"];
-  NSString *configureOptions = [options objectForKey:@"options"];
+  NSString *instanceId = [params objectForKey:@"id"];
 
 
   FirebaseAppPlugin *appPlugin = [[FirebaseAppPlugin alloc] init];
-  [appPlugin pluginInitialize];
 
   // Hack:
   // In order to load the plugin instance of the same class but different names,
@@ -27,9 +25,12 @@
   if ([appPlugin respondsToSelector:@selector(setCommandDelegate:)]) {
     [appPlugin setCommandDelegate:cdvViewController.commandDelegate];
   }
-  [cdvViewController.pluginObjects setObject:databasePlugin forKey:instanceId];
+  [cdvViewController.pluginObjects setObject:appPlugin forKey:instanceId];
   [cdvViewController.pluginsMap setValue:instanceId forKey:instanceId];
-  [appPlugin pluginInitializeWithFIRApp: appPlugin andPluginId: instanceId];
+  [appPlugin initWithOptions: params];
+  
+  // Keep the appPlugin instance
+  [self.apps setObject:appPlugin forKey:instanceId];
 
 
   CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];

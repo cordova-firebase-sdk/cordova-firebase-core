@@ -1,20 +1,30 @@
-#import "FirebaseDatabasePlugin.h"
+#import "FirebaseAppPlugin.h"
 
-@implementation FirebaseDatabasePlugin
+@implementation FirebaseAppPlugin
 
 - (void)pluginInitialize
 {
   [super pluginInitialize];
+  
+  self.objects = [NSMutableDictionary dictionary];
 }
 
-- (void)pluginInitializeWithFIRDatabase:(FIRDatabase*)databaseRef  andPluginId:(NSString *)pluginId
+- (void)initWithOptions:(NSDictionary*)options
 {
-  self.database = databaseRef;
-  self.semaphore = dispatch_semaphore_create(0);
-  self.objects = [NSMutableDictionary dictionary];
-  self.jsCallbackHolder = [NSMutableDictionary dictionary];
-  self.pluginId = pluginId;
+  self.pluginId = [options objectForKey:@"id"];
 
+//  NSString *name = [params objectForKey:@"name"];
+//  NSDictionary *configureOpts =  [options objectForKey:@"options"];
+//  FIROptions *fireOptions = [[FIROptions alloc] init];
+//  // TODO: Create fireOptions dinamically
+//  [FIRApp configureWithOptions:fireOptions];
+  @try{
+    [FIRApp configure];
+  } @catch (NSException *error) {
+    NSLog(@"--->ignore error : %@", error);
+  }
+  
+  self.app = FIRApp.defaultApp;
 }
 
 
@@ -24,15 +34,17 @@
 //---------------------------------------------------------------------------------
 - (void)delete:(CDVInvokedUrlCommand*)command
 {
-  NSDictionary *options = [command.arguments objectAtIndex:0];
-  NSLog(@"---->[ios] app.delete() %@", options);
+  NSLog(@"---->[ios] app.delete()");
 
-  NSString *appId = [options objectForKey:@"appId"];
-  FIRApp *app = [self.objects objectForKey:appId];
-
-
-  CDVPluginResult* pluginResult;
-  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  [self.app deleteApp:^(BOOL success) {
+    CDVPluginResult* pluginResult;
+    if (success) {
+      self.app = nil;
+      pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    } else {
+      pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Could not delete this app"];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  }];
 }
 @end
