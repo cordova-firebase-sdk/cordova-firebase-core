@@ -20,7 +20,7 @@
 
   <platform name="android">
     <config-file target="res/xml/config.xml" parent="/*">
-      <feature name="CordovaGoogleMaps">
+      <feature name="CordovaFirebaseCore">
         <param name="android-package" value="plugin.firebase.core.CordovaFirebaseCore"/>
         <param name="onload" value="true"/>
       </feature>
