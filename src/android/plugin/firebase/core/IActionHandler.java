@@ -1,4 +1,4 @@
-package plugin.firebase.database;
+package plugin.firebase.core;
 
 import org.apache.cordova.CallbackContext;
 import org.json.JSONArray;
