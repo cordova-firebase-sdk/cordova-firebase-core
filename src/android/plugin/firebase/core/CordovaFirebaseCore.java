@@ -82,7 +82,7 @@ public class CordovaFirebaseCore extends CordovaPlugin {
             appPlugin.initialize(cordova, webView);
 
             // Register as new plugin
-            // (plugin name is "instanceId" variable.
+            // (plugin name is "instanceId" variable)
             PluginEntry pluginEntry = new PluginEntry(instanceId, appPlugin);
             plugins.put(instanceId, pluginEntry);
             pluginManager.addService(pluginEntry);
