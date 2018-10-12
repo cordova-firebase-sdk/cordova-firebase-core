@@ -54,7 +54,7 @@ public class FirebasePluginUtil {
     }
   }
 
-  public static ArrayList<Object> Json2Map(JSONArray jsonArray) throws JSONException {
+  public static ArrayList<Object> JsonArray2Map(JSONArray jsonArray) throws JSONException {
 
     ArrayList<Object> array = new ArrayList<Object>();
 
@@ -69,7 +69,7 @@ public class FirebasePluginUtil {
       } else if (JSONObject.class.isInstance(value2)) {
         array.add(Json2Map((JSONObject)value2));
       } else if (JSONArray.class.isInstance(value2)) {
-        array.add(Json2Map((JSONArray)value2));
+        array.add(JsonArray2Map((JSONArray)value2));
       } else {
         array.add(value2 + "");
       }
@@ -94,7 +94,7 @@ public class FirebasePluginUtil {
         } else if (JSONObject.class.isInstance(value)) {
           mMap.put(key, Json2Map((JSONObject)value));
         } else if (JSONArray.class.isInstance(value)) {
-          mMap.put(key, Json2Map((JSONArray)value));
+          mMap.put(key, JsonArray2Map((JSONArray)value));
         } else {
           mMap.put(key, value + "");
         }
