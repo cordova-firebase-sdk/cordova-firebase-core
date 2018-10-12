@@ -29,4 +29,12 @@ FirebaseAppPlugin.prototype.delete = function(onSuccess, onError) {
     .catch(onError);
 };
 
+
+Object.defineProperty(FirebaseAppPlugin.prototype, '_getInstance', {
+  value: function() {
+    return this.app;
+  },
+  enumerable: false
+});
+
 module.exports = FirebaseAppPlugin;
