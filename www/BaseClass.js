@@ -1,6 +1,5 @@
 
 
-
 var VARS_FIELD = typeof Symbol === 'undefined' ? '__vars' + Date.now() : Symbol('vars');
 var SUBSCRIPTIONS_FIELD = typeof Symbol === 'undefined' ? '__subs' + Date.now() : Symbol('subscriptions');
 
@@ -14,7 +13,7 @@ function BaseClass() {
 }
 
 BaseClass.prototype = {
-  empty: function () {
+  _empty: function () {
     var vars = this[VARS_FIELD];
 
     Object.keys(vars).forEach(function (name) {
@@ -23,16 +22,16 @@ BaseClass.prototype = {
     });
   },
 
-  delete: function (key) {
+  _delete: function (key) {
     return delete this[VARS_FIELD][key];
   },
 
-  get: function (key) {
+  _get: function (key) {
     return this[VARS_FIELD].hasOwnProperty(key) ? this[VARS_FIELD][key] : undefined;
   },
 
-  set: function (key, value, noNotify) {
-    var prev = this.get(key);
+  _set: function (key, value, noNotify) {
+    var prev = this._get(key);
 
     this[VARS_FIELD][key] = value;
 
@@ -43,16 +42,16 @@ BaseClass.prototype = {
     return this;
   },
 
-  bindTo: function (key, target, targetKey, noNotify) {
+  _bindTo: function (key, target, targetKey, noNotify) {
     targetKey = targetKey || key;
 
     // If `noNotify` is true, prevent `(targetKey)_changed` event occurrs,
     // when bind the value for the first time only.
     // (Same behaviour as Google Maps JavaScript v3)
-    target.set(targetKey, target.get(targetKey), noNotify);
+    target._set(targetKey, target._get(targetKey), noNotify);
 
     this.on(key + '_changed', function (oldValue, value) {
-      target.set(targetKey, value);
+      target._set(targetKey, value);
     });
   },
 
@@ -97,20 +96,8 @@ BaseClass.prototype = {
       var eventFields = self[SUBSCRIPTIONS_FIELD];
       var eventNames = Object.keys(eventFields);
       eventNames.forEach(function(eventName) {
-        if (self[SUBSCRIPTIONS_FIELD][eventName]) {
-          var listeners = self[SUBSCRIPTIONS_FIELD][eventName];
-          var keys = Object.keys(listeners);
-          keys.forEach(function(key) {
-            if (self[SUBSCRIPTIONS_FIELD][key]) {
-              var hashCode = self[SUBSCRIPTIONS_FIELD][key]._hashCode;
-              if (hashCode) {
-                self.delete(hashCode);
-                removedListeners.push(self[SUBSCRIPTIONS_FIELD][key]);
-              }
-            }
-            delete self[SUBSCRIPTIONS_FIELD][key];
-          });
-        }
+        removedListeners = Array.prototype.concat.apply(removedListeners, self[SUBSCRIPTIONS_FIELD][eventName]);
+        delete self[SUBSCRIPTIONS_FIELD][eventName];
       });
       return removedListeners;
     }
@@ -119,14 +106,8 @@ BaseClass.prototype = {
       var listeners = self[SUBSCRIPTIONS_FIELD][eventName];
       var keys = Object.keys(listeners);
       keys.forEach(function(key) {
-        if (self[SUBSCRIPTIONS_FIELD][key]) {
-          var hashCode = self[SUBSCRIPTIONS_FIELD][key]._hashCode;
-          if (hashCode) {
-            removedListeners.push(self[SUBSCRIPTIONS_FIELD][key]);
-            self.delete(hashCode);
-          }
-          delete self[SUBSCRIPTIONS_FIELD][key];
-        }
+        removedListeners.push(self[SUBSCRIPTIONS_FIELD][key]);
+        delete self[SUBSCRIPTIONS_FIELD][key];
       });
       delete this[SUBSCRIPTIONS_FIELD][eventName];
     } else if (this[SUBSCRIPTIONS_FIELD][eventName]) {
@@ -134,10 +115,7 @@ BaseClass.prototype = {
 
       if (index !== -1) {
         var registered = this[SUBSCRIPTIONS_FIELD][eventName].splice(index, 1);
-        if (registered && registered._hashCode) {
-          removedListeners.push(registered);
-          self.delete(registered._hashCode);
-        }
+        removedListeners.push(registered[0]);
       }
     }
 
