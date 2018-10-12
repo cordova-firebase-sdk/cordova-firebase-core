@@ -1,12 +1,18 @@
 package plugin.firebase.core;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import rufus.lzstring4java.LZString;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,8 +25,17 @@ public class FirebasePluginUtil {
       return LZString.compressToBase64(((JSONObject) target).toString(0));
     } else if (target instanceof JSONArray) {
       return LZString.compressToBase64(((JSONArray) target).toString(0));
+    } else if (target instanceof Map) {
+      return serialize(Map2Json((Map<String, Object>)target));
+    } else if (target instanceof List) {
+      Iterator<Object> iterator = ((List)target).iterator();
+      JSONArray array = new JSONArray();
+      while (iterator.hasNext()) {
+        array.put(serialize(iterator.next()));
+      }
+      return serialize(array);
     } else {
-      return LZString.compressToBase64((String)target);
+      return LZString.compressToBase64(target + "");
     }
   }
 
@@ -88,5 +103,48 @@ public class FirebasePluginUtil {
       }
     }
     return mMap;
+  }
+
+  public static JSONObject Map2Json(Map map) {
+    JSONObject json = new JSONObject();
+    Set<String> keys = map.keySet();
+    Iterator<String> iterator = keys.iterator();
+    while (iterator.hasNext()) {
+      String key = iterator.next();
+      try {
+        Object value = map.get(key);
+        if (Map.class.isInstance(value)) {
+          value = Map2Json((Map)value);
+        }
+        if (value.getClass().isArray()) {
+          JSONArray values = new JSONArray();
+          Object[] objects = (Object[])value;
+          int i = 0;
+          for (i = 0; i < objects.length; i++) {
+            if (Map.class.isInstance(objects[i])) {
+              objects[i] = Map2Json((Map)objects[i]);
+            }
+            values.put(objects[i]);
+          }
+          json.put(key, values);
+        } else if (value.getClass() == ArrayList.class) {
+          JSONArray values = new JSONArray();
+          Iterator<?> listIterator = ((ArrayList<?>)value).iterator();
+          while(listIterator.hasNext()) {
+            value = listIterator.next();
+            if (Map.class.isInstance(value)) {
+              value = Map2Json((Map)value);
+            }
+            values.put(value);
+          }
+          json.put(key, values);
+        } else {
+          json.put(key, value);
+        }
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+    return json;
   }
 }
