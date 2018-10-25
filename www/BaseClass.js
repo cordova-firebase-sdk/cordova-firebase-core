@@ -1,143 +1,103 @@
-
-
-var VARS_FIELD = typeof Symbol === 'undefined' ? '__vars' + Date.now() : Symbol('vars');
-var SUBSCRIPTIONS_FIELD = typeof Symbol === 'undefined' ? '__subs' + Date.now() : Symbol('subscriptions');
-
-function BaseClass() {
-  this[VARS_FIELD] = {};
-  this[SUBSCRIPTIONS_FIELD] = {};
-
-  Object.defineProperty(this, 'hashCode', {
-    value: Math.floor(Date.now() * Math.random())
-  });
-}
-
-BaseClass.prototype = {
-  _empty: function () {
-    var vars = this[VARS_FIELD];
-
-    Object.keys(vars).forEach(function (name) {
-      vars[name] = null;
-      delete vars[name];
-    });
-  },
-
-  _delete: function (key) {
-    delete this[VARS_FIELD][key];
-  },
-
-  _get: function (key) {
-    return this[VARS_FIELD].hasOwnProperty(key) ? this[VARS_FIELD][key] : undefined;
-  },
-
-  _set: function (key, value, noNotify) {
-    var prev = this._get(key);
-
-    this[VARS_FIELD][key] = value;
-
-    if (!noNotify && prev !== value) {
-      this._trigger(key + '_changed', prev, value, key);
+"use strict";
+var BaseClass = /** @class */ (function () {
+    function BaseClass() {
+        this.vars = {};
+        this.subs = {};
+        Object.defineProperty(this, "hashCode", {
+            value: Math.floor(Date.now() * Math.random()),
+        });
     }
-
-    return this;
-  },
-
-  _bindTo: function (key, target, targetKey, noNotify) {
-    targetKey = targetKey || key;
-
-    // If `noNotify` is true, prevent `(targetKey)_changed` event occurrs,
-    // when bind the value for the first time only.
-    // (Same behaviour as Google Maps JavaScript v3)
-    target._set(targetKey, target._get(targetKey), noNotify);
-
-    this.on(key + '_changed', function (oldValue, value) {
-      target._set(targetKey, value);
-    });
-  },
-
-  _trigger: function (eventName) {
-    if (!eventName) {
-      return this;
-    }
-
-    if (!this[SUBSCRIPTIONS_FIELD][eventName]) {
-      return this;
-    }
-
-    var listeners = this[SUBSCRIPTIONS_FIELD][eventName];
-    var i = listeners.length;
-    var args = Array.prototype.slice.call(arguments, 1);
-    listeners = listeners.filter(function(listener) {
-      return !!listener;
-    });
-
-    while (i--) {
-      listeners[i].apply(this, args);
-    }
-
-    return this;
-  },
-
-  _on: function (eventName, listener) {
-    if (!listener || typeof listener !== 'function') {
-      throw new Error('Listener for on()/addEventListener() method is not a function');
-    }
-    var topic;
-    this[SUBSCRIPTIONS_FIELD][eventName] = this[SUBSCRIPTIONS_FIELD][eventName] || [];
-    topic = this[SUBSCRIPTIONS_FIELD][eventName];
-    topic.push(listener);
-    return this;
-  },
-
-  _off: function (eventName, listener) {
-    var self = this;
-    var removedListeners = [];
-    if (!eventName && !listener) {
-      var eventFields = self[SUBSCRIPTIONS_FIELD];
-      var eventNames = Object.keys(eventFields);
-      eventNames.forEach(function(eventName) {
-        removedListeners = Array.prototype.concat.apply(removedListeners, self[SUBSCRIPTIONS_FIELD][eventName]);
-        delete self[SUBSCRIPTIONS_FIELD][eventName];
-      });
-      return removedListeners;
-    }
-
-    if (eventName && !listener) {
-      var listeners = self[SUBSCRIPTIONS_FIELD][eventName];
-      var keys = Object.keys(listeners);
-      keys.forEach(function(key) {
-        removedListeners.push(self[SUBSCRIPTIONS_FIELD][key]);
-        delete self[SUBSCRIPTIONS_FIELD][key];
-      });
-      delete this[SUBSCRIPTIONS_FIELD][eventName];
-    } else if (this[SUBSCRIPTIONS_FIELD][eventName]) {
-      var index = this[SUBSCRIPTIONS_FIELD][eventName].indexOf(listener);
-
-      if (index !== -1) {
-        var registered = this[SUBSCRIPTIONS_FIELD][eventName].splice(index, 1);
-        removedListeners.push(registered[0]);
-      }
-    }
-
-    return removedListeners;
-  },
-
-  _one: function (eventName, listener) {
-    if (!listener || typeof listener !== 'function') {
-      throw new Error('Listener for one()/addEventListenerOnce() method is not a function');
-    }
-
-    var self = this;
-
-    var callback = function () {
-      self._off(eventName, arguments.callee);
-      listener.apply(self, arguments);
-      callback = undefined;
+    BaseClass.prototype._empty = function () {
+        var _this = this;
+        Object.keys(this.vars).forEach(function (name) {
+            _this.vars[name] = null;
+            delete _this.vars[name];
+        });
     };
-    this._on(eventName, callback);
-
-    return this;
-  }
-};
-
+    BaseClass.prototype._delete = function (key) {
+        delete this.vars[key];
+    };
+    BaseClass.prototype._get = function (key) {
+        return this.vars[key];
+    };
+    BaseClass.prototype._set = function (key, value, noNotify) {
+        var prev = this.vars[key];
+        this.vars[key] = value;
+        if (!noNotify && prev !== value) {
+            this._trigger(key + "_changed", prev, value, key);
+        }
+    };
+    BaseClass.prototype._bindTo = function (key, target, targetKey, noNotify) {
+        targetKey = targetKey || key;
+        // If `noNotify` is true, prevent `(targetKey)_changed` event occurrs,
+        // when bind the value for the first time only.
+        // (Same behaviour as Google Maps JavaScript v3)
+        target._set(targetKey, target._get(targetKey), noNotify);
+        this._on(key + "_changed", function (oldValue, newValue) {
+            target._set(targetKey, newValue);
+        });
+    };
+    BaseClass.prototype._trigger = function (eventName) {
+        var _this = this;
+        var parameters = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            parameters[_i - 1] = arguments[_i];
+        }
+        if (!eventName || !this.subs[eventName]) {
+            return;
+        }
+        var listeners = this.subs[eventName];
+        listeners.forEach(function (subscriber) {
+            if (subscriber) {
+                subscriber.apply(_this, parameters);
+            }
+        });
+    };
+    BaseClass.prototype._on = function (eventName, listener) {
+        if (!listener || typeof listener !== "function") {
+            throw new Error("Listener must be a function");
+        }
+        this.subs[eventName] = this.subs[eventName] || [];
+        this.subs[eventName].push(listener);
+    };
+    BaseClass.prototype._off = function (eventName, listener) {
+        var _this = this;
+        var removedListeners = [];
+        if (!eventName && !listener) {
+            var eventNames = Object.keys(this.subs);
+            eventNames.forEach(function (name) {
+                removedListeners = Array.prototype.concat.apply(removedListeners, _this.subs[name]);
+                delete _this.subs[name];
+            });
+        }
+        else if (eventName) {
+            removedListeners = Array.prototype.concat.apply(removedListeners, this.subs[eventName]);
+            delete this.subs[eventName];
+        }
+        else {
+            var index = this.subs[eventName].indexOf(listener);
+            if (index !== -1) {
+                this.subs[eventName].splice(index, 1);
+                removedListeners.push(listener);
+            }
+        }
+        return removedListeners;
+    };
+    BaseClass.prototype._one = function (eventName, listener) {
+        var _this = this;
+        if (!listener || typeof listener !== "function") {
+            throw new Error("Listener must be a function");
+        }
+        var callback = function () {
+            var parameters = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                parameters[_i] = arguments[_i];
+            }
+            _this._off(eventName, callback);
+            listener.apply(_this, parameters);
+        };
+        this._on(eventName, callback);
+    };
+    return BaseClass;
+}());
 module.exports = BaseClass;

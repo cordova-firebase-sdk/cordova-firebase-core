@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "www",
+    "rootDir": "src/ts",
+    "target": "es5"
+  },
+  "exclude": [
+    "www",
+    "*.spec.ts",
+    "node_modules"
+  ]
+}

@@ -11,7 +11,9 @@
     ]
   },
   "scripts": {
+    "build": "npm run test:ts && npx tsc",
     "test": "npm run eslint",
+    "test:ts": "npx tslint --project .",
     "eslint": "node node_modules/eslint/bin/eslint www && node node_modules/eslint/bin/eslint src && node node_modules/eslint/bin/eslint tests"
   },
   "keywords": [
@@ -23,6 +25,8 @@
   "author": "Masashi Katsumata<wf9a5m75@gmail.com>",
   "license": "Apache-2.0",
   "devDependencies": {
-    "eslint": "^3.19.0"
+    "eslint": "^3.19.0",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.3"
   }
 }
