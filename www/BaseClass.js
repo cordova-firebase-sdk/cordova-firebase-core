@@ -23,7 +23,7 @@ BaseClass.prototype = {
   },
 
   _delete: function (key) {
-    return delete this[VARS_FIELD][key];
+    delete this[VARS_FIELD][key];
   },
 
   _get: function (key) {
@@ -80,7 +80,7 @@ BaseClass.prototype = {
 
   _on: function (eventName, listener) {
     if (!listener || typeof listener !== 'function') {
-      throw Error('Listener for on()/addEventListener() method is not a function');
+      throw new Error('Listener for on()/addEventListener() method is not a function');
     }
     var topic;
     this[SUBSCRIPTIONS_FIELD][eventName] = this[SUBSCRIPTIONS_FIELD][eventName] || [];
@@ -124,7 +124,7 @@ BaseClass.prototype = {
 
   _one: function (eventName, listener) {
     if (!listener || typeof listener !== 'function') {
-      throw Error('Listener for one()/addEventListenerOnce() method is not a function');
+      throw new Error('Listener for one()/addEventListenerOnce() method is not a function');
     }
 
     var self = this;
