@@ -32,7 +32,7 @@ before_install:
 
 
 install:
-  - npm cache clean
+  - npm cache verify
   - npm install
 
 script:
