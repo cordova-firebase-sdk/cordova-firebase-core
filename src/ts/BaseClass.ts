@@ -42,7 +42,7 @@ class BaseClass {
     // If `noNotify` is true, prevent `(targetKey)_changed` event occurrs,
     // when bind the value for the first time only.
     // (Same behaviour as Google Maps JavaScript v3)
-    target._set(targetKey, target._get(targetKey), noNotify);
+    target._set(targetKey, this.vars[key], noNotify);
 
     this._on(key + "_changed", (oldValue: any, newValue: any) => {
       target._set(targetKey, newValue);
