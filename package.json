@@ -12,8 +12,8 @@
   },
   "scripts": {
     "build": "npm run test:ts && npx tsc",
-    "test": "npm run eslint",
-    "jest": "npx jest",
+    "test": "npm run jest && npm run eslint",
+    "jest": "npm run test:ts && npx jest",
     "test:watch": "npx jest --watch",
     "test:ts": "npx tslint --project .",
     "eslint": "node node_modules/eslint/bin/eslint www && node node_modules/eslint/bin/eslint src && node node_modules/eslint/bin/eslint tests"
