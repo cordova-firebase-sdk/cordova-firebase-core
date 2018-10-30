@@ -11,7 +11,7 @@
     ]
   },
   "scripts": {
-    "build": "npm run test:ts && npx tsc",
+    "build": "npm run tslint && npx tsc",
     "test": "npm run jest && npm run eslint",
     "tslint": "npx tslint --project .",
     "jest": "npm run tslint && npx jest",

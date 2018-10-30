@@ -9,13 +9,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Unless otherwise noted, this is not true of other classes in the API,
  * and inheriting from other classes in the API is not supported.
  *
+ * @remarks
+ * This class does not provided in original Firebase JS SDK,
+ * however this is useful for creating this plugin.
  */
-var BaseClass = /** @class */ (function () {
+class BaseClass {
     /**
      * Create new BaseClass
      * @constructor
      */
-    function BaseClass() {
+    constructor() {
         /**
          * @hidden
          * Keep values with keys.
@@ -33,29 +36,28 @@ var BaseClass = /** @class */ (function () {
     /**
      * Removes all key-value stores
      */
-    BaseClass.prototype._empty = function () {
-        var _this = this;
-        Object.keys(this.vars).forEach(function (name) {
-            _this.vars[name] = null;
-            delete _this.vars[name];
+    _empty() {
+        Object.keys(this.vars).forEach((name) => {
+            this.vars[name] = null;
+            delete this.vars[name];
         });
-    };
+    }
     /**
      * Deletes the value saved with key.
      *
      * @param key - target key
      */
-    BaseClass.prototype._delete = function (key) {
+    _delete(key) {
         delete this.vars[key];
-    };
+    }
     /**
      * Returns the value saved with key.
      *
      * @param key - target key
      */
-    BaseClass.prototype._get = function (key) {
+    _get(key) {
         return this.vars[key];
-    };
+    }
     /**
      * Saves one value with key.
      *
@@ -63,13 +65,13 @@ var BaseClass = /** @class */ (function () {
      * @param value - value
      * @param [noNotify] - Sets `true` if you don't want to fire `(key)_changed` event.
      */
-    BaseClass.prototype._set = function (key, value, noNotify) {
-        var prev = this.vars[key];
+    _set(key, value, noNotify) {
+        const prev = this.vars[key];
         this.vars[key] = value;
         if (!noNotify && prev !== value) {
             this._trigger(key + "_changed", prev, value, key);
         }
-    };
+    }
     /**
      * Binds one value to another BaseClass instance.
      * Automatically changes the value of target instance if this instance's property is changed.
@@ -83,16 +85,16 @@ var BaseClass = /** @class */ (function () {
      * @param [targetKey] - Sets the property name of `target`. If omit, `key` is used.
      * @param [noNotify] - Sets `true` if you don't want to fire `(key)_changed` event at the first time.
      */
-    BaseClass.prototype._bindTo = function (key, target, targetKey, noNotify) {
+    _bindTo(key, target, targetKey, noNotify) {
         targetKey = targetKey || key;
         // If `noNotify` is true, prevent `(targetKey)_changed` event occurrs,
         // when bind the value for the first time only.
         // (Same behaviour as Google Maps JavaScript v3)
         target._set(targetKey, this.vars[key], noNotify);
-        this._on(key + "_changed", function (oldValue, newValue) {
+        this._on(key + "_changed", (oldValue, newValue) => {
             target._set(targetKey, newValue);
         });
-    };
+    }
     /**
      * Fire an event named `eventName` with `parameters`.
      *
@@ -103,22 +105,17 @@ var BaseClass = /** @class */ (function () {
      * @param eventName - event name
      * @param parameters - any data
      */
-    BaseClass.prototype._trigger = function (eventName) {
-        var _this = this;
-        var parameters = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            parameters[_i - 1] = arguments[_i];
-        }
+    _trigger(eventName, ...parameters) {
         if (!eventName || !this.subs[eventName]) {
             return;
         }
-        var listeners = this.subs[eventName];
-        listeners.forEach(function (subscriber) {
+        const listeners = this.subs[eventName];
+        listeners.forEach((subscriber) => {
             if (subscriber) {
-                subscriber.apply(_this, parameters);
+                subscriber.apply(this, parameters);
             }
         });
-    };
+    }
     /**
      * Catch the events fired with {@link BaseClass._trigger | the _trigger() method}.
      *
@@ -133,13 +130,13 @@ var BaseClass = /** @class */ (function () {
      * @param eventName - event name
      * @param listener - event listener
      */
-    BaseClass.prototype._on = function (eventName, listener) {
+    _on(eventName, listener) {
         if (!listener || typeof listener !== "function") {
             throw new Error("Listener must be a function");
         }
         this.subs[eventName] = this.subs[eventName] || [];
         this.subs[eventName].push(listener);
-    };
+    }
     /**
      * Remove event listener
      *
@@ -184,16 +181,15 @@ var BaseClass = /** @class */ (function () {
      *
      * @param [eventName] - event name
      * @param [listener] - event listener
-     * @returns Removed event listeners.
+     * @returnss Removed event listeners.
      */
-    BaseClass.prototype._off = function (eventName, listener) {
-        var _this = this;
-        var removedListeners = [];
+    _off(eventName, listener) {
+        let removedListeners = [];
         if (!eventName && !listener) {
-            var eventNames = Object.keys(this.subs);
-            eventNames.forEach(function (name) {
-                removedListeners = Array.prototype.concat.apply(removedListeners, _this.subs[name]);
-                delete _this.subs[name];
+            const eventNames = Object.keys(this.subs);
+            eventNames.forEach((name) => {
+                removedListeners = Array.prototype.concat.apply(removedListeners, this.subs[name]);
+                delete this.subs[name];
             });
         }
         else if (eventName) {
@@ -201,14 +197,14 @@ var BaseClass = /** @class */ (function () {
             delete this.subs[eventName];
         }
         else {
-            var index = this.subs[eventName].indexOf(listener);
+            const index = this.subs[eventName].indexOf(listener);
             if (index !== -1) {
                 this.subs[eventName].splice(index, 1);
                 removedListeners.push(listener);
             }
         }
         return removedListeners;
-    };
+    }
     /**
      * The same as {@link cordova-firebase-core#BaseClass._on}, but it works only one time.
      *
@@ -224,21 +220,15 @@ var BaseClass = /** @class */ (function () {
      * @param eventName - event name
      * @param listener - event listener
      */
-    BaseClass.prototype._one = function (eventName, listener) {
-        var _this = this;
+    _one(eventName, listener) {
         if (!listener || typeof listener !== "function") {
             throw new Error("Listener must be a function");
         }
-        var callback = function () {
-            var parameters = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                parameters[_i] = arguments[_i];
-            }
-            _this._off(eventName, callback);
-            listener.apply(_this, parameters);
+        const callback = (...parameters) => {
+            this._off(eventName, callback);
+            listener.apply(this, parameters);
         };
         this._on(eventName, callback);
-    };
-    return BaseClass;
-}());
+    }
+}
 exports.BaseClass = BaseClass;
