@@ -13,9 +13,9 @@
   "scripts": {
     "build": "npm run test:ts && npx tsc",
     "test": "npm run jest && npm run eslint",
-    "jest": "npm run test:ts && npx jest",
-    "test:watch": "npx jest --watch",
-    "test:ts": "npx tslint --project .",
+    "tslint": "npx tslint --project .",
+    "jest": "npm run tslint && npx jest",
+    "jest:watch": "npx jest --watch",
     "eslint": "node node_modules/eslint/bin/eslint www src tests",
     "tsdoc": "npx typedoc --options typedoc.js src/ts "
   },

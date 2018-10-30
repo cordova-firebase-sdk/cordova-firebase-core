@@ -8,6 +8,9 @@
  * Unless otherwise noted, this is not true of other classes in the API,
  * and inheriting from other classes in the API is not supported.
  *
+ * @remarks
+ * This class does not provided in original Firebase JS SDK,
+ * however this is useful for creating this plugin.
  */
 export class BaseClass {
 
@@ -196,7 +199,7 @@ export class BaseClass {
    *
    * @param [eventName] - event name
    * @param [listener] - event listener
-   * @returns Removed event listeners.
+   * @returnss Removed event listeners.
    */
   public _off(eventName?: string, listener?: (...parameters: any[]) => void): Array<(...parameters: any[]) => void> {
     let removedListeners: Array<(...parameters: any[]) => void> = [];

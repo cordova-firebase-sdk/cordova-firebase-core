@@ -1,4 +1,3 @@
-import { Promise } from "es6-promise";
 import { BaseClass } from "../BaseClass";
 
 describe("BaseClass test", () => {
@@ -18,6 +17,8 @@ describe("BaseClass test", () => {
       const instanceB: BaseClass = new BaseClass();
 
       instanceA._bindTo("hello", instanceB, "anotherHello");
+      instanceA._set("hello", "world");
+      expect(instanceA._get("hello")).toEqual("world");
       expect(instanceB._get("anotherHello")).toEqual("world");
     });
   });
@@ -41,7 +42,7 @@ describe("BaseClass test", () => {
     it("'instance._on()' should receive 'hello_changed' event twice.", (done) => {
       (new Promise((resolve, reject) => {
         const instance: BaseClass = new BaseClass();
-        const timer: any = setTimeout(reject, 100); // just in case
+        const timer: any = setTimeout(reject, 10); // just in case
 
         let count: number = 0;
         const listener = (prevValue: string, newValue: string) => {
@@ -54,8 +55,9 @@ describe("BaseClass test", () => {
         };
         instance._on("hello_changed", listener);
 
-        instance._set("hello", "你好");
-        instance._set("hello", "こんにちは");
+        instance._set("hello", "你好");      // should receive
+        instance._set("hello", "こんにちは"); // should receive
+        instance._set("hello", "안녕하세요");  // should not receive
       }))
       .then((answer: string) => {
         expect(answer).toBe("こんにちは");
@@ -66,7 +68,7 @@ describe("BaseClass test", () => {
     it("'instance._on(one, two, three)' should receive `1, 2, 3`.", (done) => {
       (new Promise((resolve, reject) => {
         const instance: BaseClass = new BaseClass();
-        const timer: any = setTimeout(reject, 100); // just in case
+        const timer: any = setTimeout(reject, 10); // just in case
 
         instance._on("myEvent", (one: number, two: number, three: number) => {
           expect(one).toBe(1);
@@ -92,13 +94,13 @@ describe("BaseClass test", () => {
         };
         instance._on("hello_changed", listener);
 
-        setTimeout(() => {
-          resolve(count);
-        }, 100);
 
-        for (let i: number = 0; i < 100; i++) {
+        for (let i: number = 0; i < 10; i++) {
           instance._set("hello", i);
         }
+        setTimeout(() => {
+          resolve(count);
+        }, 3);
       }))
       .then((answer: number) => {
         expect(answer).toBe(1);
@@ -123,7 +125,7 @@ describe("BaseClass test", () => {
 
         setTimeout(() => {
           resolve(called);
-        }, 100);
+        }, 3);
 
       }))
       .then((answer: boolean) => {
@@ -137,7 +139,7 @@ describe("BaseClass test", () => {
     it("'instance._trigger()' should fire a 'myEvent' event.", (done) => {
       (new Promise((resolve, reject) => {
         const instance: BaseClass = new BaseClass();
-        const timer: any = setTimeout(reject, 100); // just in case
+        const timer: any = setTimeout(reject, 10); // just in case
 
         instance._on("myEvent", (...parameters: any[]) => {
           clearTimeout(timer);

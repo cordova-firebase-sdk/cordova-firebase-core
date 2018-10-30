@@ -4,7 +4,7 @@
     "moduleResolution": "node",
     "outDir": "www",
     "rootDir": "src/ts",
-    "target": "es5",
+    "target": "es2015",
     "declaration": true
   },
   "exclude": [
