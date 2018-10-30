@@ -1,6 +1,6 @@
 module.exports = {
   "name": "cordova-firebase-core",
-  "target": "es2015",
+  "target": "es5",
   "exclude": "**/__test__/*",
   "out": "docs",
   "type": "module"

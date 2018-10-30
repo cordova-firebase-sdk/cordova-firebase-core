@@ -27,8 +27,11 @@
   ],
   "author": "Masashi Katsumata<wf9a5m75@gmail.com>",
   "license": "Apache-2.0",
-  "devDependencies": {
+  "dependencies": {
     "@types/es6-promise": "^3.3.0",
+    "es6-promise": "^4.2.5"
+  },
+  "devDependencies": {
     "@types/jest": "^23.3.7",
     "cordova-js": "^4.2.4",
     "eslint": "^3.19.0",

@@ -1,3 +1,4 @@
+import { Promise } from "es6-promise";
 import { BaseClass } from "./BaseClass";
 /**
  * MVC Array class.

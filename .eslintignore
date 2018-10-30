@@ -2,3 +2,7 @@ www/lz-string.js
 www/BaseClass.js
 src/ts/
 .*
+www/__test__/
+www/BaseArrayClass.js
+www/common.js
+www/CommandQueue.js

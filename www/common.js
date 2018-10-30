@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var es6_promise_1 = require("es6-promise");
 /**
  * Returns true if given `packageName` is available.
  *
@@ -9,10 +10,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param packageName - name space
  * @returns true if available.
  */
-exports.isInitialized = (packageName) => {
-    let parent = window;
-    const steps = packageName.split(/\\./);
-    const results = steps.filter((step) => {
+exports.isInitialized = function (packageName) {
+    var parent = window;
+    var steps = packageName.split(/\\./);
+    var results = steps.filter(function (step) {
         if (step in parent) {
             parent = parent[step];
             return true;
@@ -28,18 +29,18 @@ exports.isInitialized = (packageName) => {
  * @param options - options
  * @returns Promise<void>
  */
-exports.loadJsPromise = (options) => {
-    return new Promise((resolve, reject) => {
+exports.loadJsPromise = function (options) {
+    return new es6_promise_1.Promise(function (resolve, reject) {
         if (exports.isInitialized(options.package)) {
             resolve();
         }
         else {
-            const scriptTag = document.createElement("src");
+            var scriptTag = document.createElement("src");
             scriptTag.src = options.url;
             scriptTag.onerror = reject;
-            scriptTag.onload = () => {
-                let timeout = 20;
-                const timer = setInterval(() => {
+            scriptTag.onload = function () {
+                var timeout = 20;
+                var timer = setInterval(function () {
                     timeout--;
                     if (exports.isInitialized(options.package)) {
                         clearInterval(timer);
@@ -57,6 +58,6 @@ exports.loadJsPromise = (options) => {
 /**
  * @hidden
  */
-exports.nextTick = (fn) => {
-    Promise.resolve().then(fn);
+exports.nextTick = function (fn) {
+    es6_promise_1.Promise.resolve().then(fn);
 };

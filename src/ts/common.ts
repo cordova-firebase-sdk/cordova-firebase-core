@@ -1,3 +1,5 @@
+import { Promise } from "es6-promise";
+
 /**
  * Returns true if given `packageName` is available.
  *
