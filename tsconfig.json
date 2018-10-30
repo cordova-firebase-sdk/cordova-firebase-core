@@ -4,11 +4,12 @@
     "moduleResolution": "node",
     "outDir": "www",
     "rootDir": "src/ts",
-    "target": "es5"
+    "target": "es5",
+    "declaration": true
   },
   "exclude": [
     "www",
-    "*.spec.ts",
+    "__test__",
     "node_modules"
   ]
 }
