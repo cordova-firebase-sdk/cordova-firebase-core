@@ -1,15 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin id="cordova-firebase-core" version="0.0.3" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
   <name>cordova-firebase-core</name>
-  <js-module name="cordova-firebase-core" src="www/cordova-firebase-core.js">
+  <js-module name="App" src="www/www/App.js" >
     <clobbers target="plugin.firebase.core"/>
   </js-module>
-  <js-module name="Common" src="www/common.js" />
-  <js-module name="BaseClass" src="www/BaseClass.js" />
-  <js-module name="BaseArrayClass" src="www/BaseArrayClass.js" />
+  <js-module name="Common" src="www/www/common.js" />
+  <js-module name="BaseClass" src="www/www/BaseClass.js" />
+  <js-module name="BaseArrayClass" src="www/www/BaseArrayClass.js" />
   <js-module name="LZString" src="www/lz-string.js" />
-  <js-module name="App" src="www/App.js" />
-  <js-module name="FirebaseCoreCommandQueue" src="www/firebase-core-command-queue.js" />
+  <js-module name="FirebaseCoreCommandQueue" src="www/www/CommandQueue.js" />
 
   <platform name="browser">
     <js-module name="CordovaFirebaseCore" src="src/browser/CordovaFirebaseCore.js">
