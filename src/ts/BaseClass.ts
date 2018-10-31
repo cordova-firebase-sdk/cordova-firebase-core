@@ -27,16 +27,16 @@ export class BaseClass {
   protected subs: any = {};
 
   /**
-   * Create new BaseClass
-   * @constructor
+   * @hidden
+   * Keep listeners with event name.
    */
-  constructor() {
+  protected readonly hashCode: number = Math.floor(Date.now() * Math.random());
 
-    Object.defineProperty(this, "hashCode", {
-      value: Math.floor(Date.now() * Math.random()),
-    });
-
-  }
+  // /**
+  //  * Create new BaseClass
+  //  * @constructor
+  //  */
+  // constructor() {}
 
   /**
    * Removes all key-value stores

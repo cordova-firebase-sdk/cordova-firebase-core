@@ -14,10 +14,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * however this is useful for creating this plugin.
  */
 var BaseClass = /** @class */ (function () {
-    /**
-     * Create new BaseClass
-     * @constructor
-     */
     function BaseClass() {
         /**
          * @hidden
@@ -29,10 +25,17 @@ var BaseClass = /** @class */ (function () {
          * Keep listeners with event name.
          */
         this.subs = {};
-        Object.defineProperty(this, "hashCode", {
-            value: Math.floor(Date.now() * Math.random()),
-        });
+        /**
+         * @hidden
+         * Keep listeners with event name.
+         */
+        this.hashCode = Math.floor(Date.now() * Math.random());
     }
+    // /**
+    //  * Create new BaseClass
+    //  * @constructor
+    //  */
+    // constructor() {}
     /**
      * Removes all key-value stores
      */

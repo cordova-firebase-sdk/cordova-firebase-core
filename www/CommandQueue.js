@@ -16,7 +16,7 @@ window.addEventListener("unload", function () {
 });
 exports.execCmd = function (params) {
     params.execOptions = params.execOptions || {};
-    params.options = params.options || [];
+    params.args = params.args || [];
     // If the instance has been removed, do not execute any methods on it
     // except remove function itself.
     if (params.context.isRemoved && params.execOptions.remove) {
@@ -121,10 +121,10 @@ var privateExec = function () {
         if (task.execOptions.sync) {
             isWaitMethod = task.methodName;
             // console.log(`[sync start] ${commandParams.args[2]}.${methodName}`);
-            cordova_1.exec(task.onSuccess, task.onError, task.context.id, task.methodName, task.options);
+            cordova_1.exec(task.onSuccess, task.onError, task.context.id, task.methodName, task.args);
             break;
         }
-        cordova_1.exec(task.onSuccess, task.onError, task.context.id, task.methodName, task.options);
+        cordova_1.exec(task.onSuccess, task.onError, task.pluginName || task.context.id, task.methodName, task.args);
     }
     isExecuting = false;
 };

@@ -1,12 +1,13 @@
 import { BaseClass } from "./BaseClass";
 export declare class PluginBase extends BaseClass {
-    isReady: boolean;
     isRemoved: boolean;
+    protected _isReady: boolean;
     private _id;
     /**
      * @constructor
-     * @param id - Plugin's ID
+     * @param idSuffix - Plugin's ID suffix
      */
-    constructor(id: string);
+    constructor(idSuffix: string);
     readonly id: string;
+    readonly isReady: boolean;
 }

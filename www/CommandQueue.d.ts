@@ -9,13 +9,18 @@ export interface IExecCmdParams {
      */
     context: PluginBase;
     /**
+     * Plugin's name in native side.
+     * If omit this, context.id is used.
+     */
+    pluginName?: string;
+    /**
      * Execute method name
      */
     methodName: string;
     /**
      * parameters for native side
      */
-    options?: any[];
+    args?: any[];
     /**
      * synchronize options
      */

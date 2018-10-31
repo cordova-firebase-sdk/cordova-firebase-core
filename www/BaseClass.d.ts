@@ -23,10 +23,10 @@ export declare class BaseClass {
      */
     protected subs: any;
     /**
-     * Create new BaseClass
-     * @constructor
+     * @hidden
+     * Keep listeners with event name.
      */
-    constructor();
+    protected readonly hashCode: number;
     /**
      * Removes all key-value stores
      */

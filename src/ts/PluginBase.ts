@@ -2,22 +2,26 @@ import { BaseClass } from "./BaseClass";
 
 export class PluginBase extends BaseClass {
 
-  public isReady: boolean;
-
   public isRemoved: boolean;
+
+  protected _isReady: boolean;
 
   private _id: string;
 
   /**
    * @constructor
-   * @param id - Plugin's ID
+   * @param idSuffix - Plugin's ID suffix
    */
-  public constructor(id: string) {
+  public constructor(idSuffix: string) {
     super();
-    this._id = id;
+    this._id = this.hashCode + "_" + idSuffix;
   }
 
   get id(): string {
     return this._id;
+  }
+
+  get isReady(): boolean {
+    return this._isReady;
   }
 }

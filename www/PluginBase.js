@@ -18,16 +18,23 @@ var PluginBase = /** @class */ (function (_super) {
     __extends(PluginBase, _super);
     /**
      * @constructor
-     * @param id - Plugin's ID
+     * @param idSuffix - Plugin's ID suffix
      */
-    function PluginBase(id) {
+    function PluginBase(idSuffix) {
         var _this = _super.call(this) || this;
-        _this._id = id;
+        _this._id = _this.hashCode + "_" + idSuffix;
         return _this;
     }
     Object.defineProperty(PluginBase.prototype, "id", {
         get: function () {
             return this._id;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PluginBase.prototype, "isReady", {
+        get: function () {
+            return this._isReady;
         },
         enumerable: true,
         configurable: true

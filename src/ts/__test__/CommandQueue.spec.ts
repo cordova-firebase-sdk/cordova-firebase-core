@@ -9,18 +9,17 @@ describe("[commandQueue]", () => {
 
     constructor() {
       super("mock_plugin");
-      this.isReady = true;
+      this._isReady = true;
     }
 
     public hoge(request): Promise<number> {
       const params: IExecCmdParams = {
-        context: this,
-
-        methodName: "newInstance",
-
-        options: [
+        args: [
           request,
         ],
+        context: this,
+        methodName: "newInstance",
+        pluginName: "mock_plugin",
       };
 
       return execCmd(params);

@@ -14,6 +14,12 @@ export interface IExecCmdParams {
   context: PluginBase;
 
   /**
+   * Plugin's name in native side.
+   * If omit this, context.id is used.
+   */
+  pluginName?: string;
+
+  /**
    * Execute method name
    */
   methodName: string;
@@ -21,7 +27,7 @@ export interface IExecCmdParams {
   /**
    * parameters for native side
    */
-  options?: any[];
+  args?: any[];
 
   /**
    * synchronize options
@@ -48,7 +54,7 @@ window.addEventListener("unload", () => {
 
 export const execCmd = (params: IExecCmdParams): Promise<any> => {
   params.execOptions = params.execOptions || {};
-  params.options = params.options || [];
+  params.args = params.args || [];
 
   // If the instance has been removed, do not execute any methods on it
   // except remove function itself.
@@ -164,11 +170,11 @@ const privateExec = () => {
     if (task.execOptions.sync) {
       isWaitMethod = task.methodName;
       // console.log(`[sync start] ${commandParams.args[2]}.${methodName}`);
-      exec(task.onSuccess, task.onError, task.context.id, task.methodName, task.options);
+      exec(task.onSuccess, task.onError, task.context.id, task.methodName, task.args);
       break;
     }
 
-    exec(task.onSuccess, task.onError, task.context.id, task.methodName, task.options);
+    exec(task.onSuccess, task.onError, task.pluginName || task.context.id, task.methodName, task.args);
   }
 
   isExecuting = false;
