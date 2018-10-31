@@ -1,6 +1,6 @@
 module.exports = {
   roots: [
-    "<rootDir>/src/ts"
+    "<rootDir>/src/"
   ],
   transform: {
     "^.+\\.tsx?$": "ts-jest",
@@ -18,6 +18,6 @@ module.exports = {
     cordova: {},
   },
   moduleNameMapper: {
-    "^cordova": "<rootDir>/src/ts/__test__/cordova/"
+    "^cordova": "<rootDir>/src/www/__test__/cordova/"
   }
 };

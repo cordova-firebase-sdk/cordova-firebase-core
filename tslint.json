@@ -10,7 +10,12 @@
       "variable-name": [
         "allow-leading-underscore"
       ],
-      "no-implicit-dependencies": false
+      "no-implicit-dependencies": false,
+      "max-classes-per-file": [
+        true,
+        "src/www/App.ts"
+      ]
     },
+    "interface-name": [true, "never-prefix"],
     "rulesDirectory": []
 }

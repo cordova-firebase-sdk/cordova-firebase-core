@@ -3,14 +3,13 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "www",
-    "rootDir": "src/ts",
+    "rootDir": "src/",
     "target": "es5",
     "declaration": true
   },
   "exclude": [
     "www",
-    "src/__test__/**/*.spec.ts",
-    "src/__test__/*.spec.ts",
+    "src/**/__test__/*.spec.ts",
     "node_modules"
   ],
   "rules": {

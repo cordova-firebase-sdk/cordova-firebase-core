@@ -1,3 +1,5 @@
 node_modules
 docs/
-www/__test__
+www/
+!www/lz-string.js
+!src/www/

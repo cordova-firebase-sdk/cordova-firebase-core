@@ -1,8 +1,3 @@
-www/lz-string.js
-www/BaseClass.js
-src/ts/
+www/
+src/www/
 .*
-www/__test__/
-www/BaseArrayClass.js
-www/common.js
-www/CommandQueue.js

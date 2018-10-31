@@ -103,3 +103,43 @@ export class App extends PluginBase {
     }
   }
 }
+
+
+class SecretClass {
+
+  public readonly SDK_VERSION = "0.0.2";
+
+  public readonly WEBJS_SDK_VERSION = "5.5.0";
+
+  public readonly ANDROID_SDK_VERSION = "5.5.0";
+
+  public readonly IOS_SDK_VERSION = "5.5.0";
+
+  public get apps(): App[] {
+    return this._apps;
+  }
+
+  private _apps: App[] = [];
+
+  /**
+   * @param initOptions - Application initialize options
+   * @param [name] - Application name.
+   * @returns Application instance
+   */
+  public initializeApp(initOptions: IAppInitializeOptions, name?: string): App {
+    name = name || "[DEFAULT]";
+    const app: App = new App(name, initOptions);
+    this._apps.push(app);
+    return app;
+  }
+}
+
+(cordova as any).addConstructor(() => {
+  (window as any).plugin = (window as any).plugin || {};
+  (window as any).plugin.firebase = (window as any).plugin.firebase ;
+  if (!(window as any).plugin.firebase) {
+    Object.defineProperty((window as any).plugin, "firebase", {
+      value: new SecretClass(),
+    });
+  }
+});
