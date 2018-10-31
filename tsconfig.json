@@ -9,7 +9,11 @@
   },
   "exclude": [
     "www",
-    "src/__test__",
+    "src/__test__/**/*.spec.ts",
+    "src/__test__/*.spec.ts",
     "node_modules"
-  ]
+  ],
+  "rules": {
+    "no-implicit-dependencies": [true, "dev"]
+  }
 }

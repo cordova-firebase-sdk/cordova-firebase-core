@@ -3,7 +3,7 @@ module.exports = {
     "<rootDir>/src/ts"
   ],
   transform: {
-    "^.+\\.tsx?$": "ts-jest"
+    "^.+\\.tsx?$": "ts-jest",
   },
   testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
   moduleFileExtensions: [
@@ -14,10 +14,10 @@ module.exports = {
     "json",
     "node"
   ],
-  moduleNameMapper: {
-    "^cordova/(.*)$": "<rootDir>/node_modules/cordova-js/src/common/$1"
-  },
   globals: {
     cordova: {},
   },
+  moduleNameMapper: {
+    "^cordova": "<rootDir>/src/ts/__test__/cordova/"
+  }
 };

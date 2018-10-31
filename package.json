@@ -28,12 +28,13 @@
   "author": "Masashi Katsumata<wf9a5m75@gmail.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@types/cordova": "0.0.34",
     "@types/es6-promise": "^3.3.0",
+    "cordova-js": "^4.2.4",
     "es6-promise": "^4.2.5"
   },
   "devDependencies": {
     "@types/jest": "^23.3.7",
-    "cordova-js": "^4.2.4",
     "eslint": "^3.19.0",
     "jest": "^23.6.0",
     "ts-jest": "^23.10.4",
