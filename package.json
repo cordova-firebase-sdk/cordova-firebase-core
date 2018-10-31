@@ -12,11 +12,11 @@
   },
   "scripts": {
     "build": "npm run tslint && npx tsc",
-    "test": "npm run jest && npm run eslint",
+    "test": "npm run jest",
     "tslint": "npx tslint --project .",
     "jest": "npm run tslint && npx jest",
     "jest:watch": "npx jest --watch",
-    "eslint": "node node_modules/eslint/bin/eslint www src tests",
+    "eslint": "node node_modules/eslint/bin/eslint src tests",
     "tsdoc": "npx typedoc --options typedoc.js src/ts "
   },
   "keywords": [
