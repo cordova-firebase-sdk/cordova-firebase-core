@@ -18,7 +18,7 @@
     "jest:watch": "npx jest --watch",
     "tsdoc": "npx typedoc --options typedoc.js src/ts "
   },
-  "module": "./src/www/index.js",
+  "module": "./src/www/index.d.ts",
   "typings": "./src/www/index.d.ts",
   "files": [
     "src/",

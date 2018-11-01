@@ -36,8 +36,8 @@ describe("[commandQueue]", () => {
   it("should return the same array as request", (done) => {
 
     const instance: MockClass = new MockClass();
-    const tasks: Promise[][] = [];
-    const answer: T[] = [];
+    const tasks: Array<any> = [];
+    const answer: Array<any> = [];
     for (let i = 0; i < 20; i++) {
       answer.push([`request-${i}`]);
       tasks.push(instance.hoge(`request-${i}`));
