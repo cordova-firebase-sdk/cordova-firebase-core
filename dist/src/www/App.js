@@ -116,12 +116,14 @@ var SecretClass = /** @class */ (function () {
     };
     return SecretClass;
 }());
-cordova.addConstructor(function () {
-    window.plugin = window.plugin || {};
-    // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
-    if (!window.plugin.firebase) {
-        Object.defineProperty(window.plugin, "firebase", {
-            value: new SecretClass(),
-        });
-    }
-});
+if (cordova && cordova.version) {
+    cordova.addConstructor(function () {
+        window.plugin = window.plugin || {};
+        // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
+        if (!window.plugin.firebase) {
+            Object.defineProperty(window.plugin, "firebase", {
+                value: new SecretClass(),
+            });
+        }
+    });
+}

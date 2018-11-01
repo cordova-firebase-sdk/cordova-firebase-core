@@ -15,6 +15,7 @@ module.exports = {
     "node"
   ],
   globals: {
+    cordova: {},
     firebase: {},
     window: {},
   },

@@ -16,9 +16,9 @@
     "tslint": "npx tslint --project .",
     "jest": "npm run tslint && npx jest",
     "jest:watch": "npx jest --watch",
-    "tsdoc": "npx typedoc --options typedoc.js src/ts "
+    "tsdoc": "npx typedoc --options typedoc.js src/www "
   },
-  "module": "./src/www/index.js",
+  "main": "./src/www/index.js",
   "typings": "./src/www/index.d.ts",
   "files": [
     "src/",

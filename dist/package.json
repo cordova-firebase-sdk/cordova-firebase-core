@@ -11,14 +11,14 @@
     ]
   },
   "scripts": {
-    "build": "rm -rf dist && npm run tslint && npx tsc && cp -R package.json plugin.xml README.md js src dist/",
+    "build": "rm -rf dist/* && npm run tslint && npx tsc && cp -R package.json plugin.xml README.md js src dist/",
     "test": "npm run jest",
     "tslint": "npx tslint --project .",
     "jest": "npm run tslint && npx jest",
     "jest:watch": "npx jest --watch",
     "tsdoc": "npx typedoc --options typedoc.js src/ts "
   },
-  "module": "./src/www/index.d.ts",
+  "main": "./src/www/index.js",
   "typings": "./src/www/index.d.ts",
   "files": [
     "src/",
