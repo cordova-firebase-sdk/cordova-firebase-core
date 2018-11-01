@@ -7,11 +7,10 @@
 
 ## Supported platforms
   This plugin supports the following platforms:
-  
-    - Browser (implemented, not tested deeply)
-    - iOS (implemented, not tested deeply)
 
-  `Android` will be supported soon.
+    - Browser (implemented, tested)
+    - iOS (implemented, not tested deeply)
+    - Android (implemented, not tested deeply)
 
 ## Installation
 
