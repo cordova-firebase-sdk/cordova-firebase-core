@@ -2,13 +2,19 @@ import { BaseClass } from "./BaseClass";
 import { loadJsPromise } from "./common";
 import { FirebaseAppPlugin } from "./FirebaseAppPlugin";
 
+/**
+ * @hidden
+ * This class is implementation of "CordovaFirebaseCore" for browser platform.
+ * Not use for JS side.
+ */
 export class CordovaFirebaseCore extends BaseClass {
 
   constructor() {
     super();
+    console.log("--->constructor");
   }
 
-  public newInstance(resolve, reject, args: any[]) {
+  public newInstance(resolve, reject, args: any[]): void {
 
     loadJsPromise({
       package: "firebase.app",
@@ -37,7 +43,8 @@ export class CordovaFirebaseCore extends BaseClass {
       keys.forEach((key: string) => {
         dummyObj[key] = instance[key].bind(instance);
       });
-      require("cordova/exec/proxy").add(options.id, dummyObj);
+      const proxy: any = require("cordova/exec/proxy");
+      proxy.add(options.id, dummyObj);
 
       resolve();
     })
@@ -49,15 +56,18 @@ export class CordovaFirebaseCore extends BaseClass {
 
 
 // Register this plugin
-(() => {
-  const instance: any = new CordovaFirebaseCore();
-  const dummyObj = {};
-  const keys: string[] = Object.getOwnPropertyNames(CordovaFirebaseCore.prototype).filter((p: string) => {
-    return typeof CordovaFirebaseCore.prototype[p] === "function";
-  });
-  keys.forEach((key: string) => {
-    dummyObj[key] = instance[key].bind(instance);
-  });
+if ((window as any).cordova) {
+  (() => {
+    const instance: any = new CordovaFirebaseCore();
+    const dummyObj = {};
+    const keys: string[] = Object.getOwnPropertyNames(CordovaFirebaseCore.prototype).filter((p: string) => {
+      return typeof CordovaFirebaseCore.prototype[p] === "function";
+    });
+    keys.forEach((key: string) => {
+      dummyObj[key] = instance[key].bind(instance);
+    });
 
-  require("cordova/exec/proxy").add("CordovaFirebaseCore", dummyObj);
-})();
+    const proxy: any = require("cordova/exec/proxy");
+    proxy.add("CordovaFirebaseCore", dummyObj);
+  })();
+}

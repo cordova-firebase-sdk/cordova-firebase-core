@@ -38,6 +38,7 @@ export class App extends PluginBase {
       storageBucket: initOptions.storageBucket || null,
     };
 
+    // Create one new instance in native side.
     execCmd({
       args: [{
         id: this.id,

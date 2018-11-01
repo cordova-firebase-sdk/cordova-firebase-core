@@ -2,7 +2,8 @@ import { BaseClass } from "./BaseClass";
 
 /**
  * @hidden
- * This class is for native implement. Not for public use.
+ * This class is implementation of "FirebaseAppPlugin" for browser platform.
+ * Not use for JS side.
  */
 export class FirebaseAppPlugin extends BaseClass {
 
