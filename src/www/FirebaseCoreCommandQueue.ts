@@ -57,6 +57,7 @@ window.addEventListener("unload", () => {
 export const execCmd = (params: IExecCmdParams): Promise<any> => {
   params.execOptions = params.execOptions || {};
   params.args = params.args || [];
+  params.pluginName = params.pluginName || params.context.id;
 
   // If the instance has been removed, do not execute any methods on it
   // except remove function itself.
@@ -74,7 +75,7 @@ export const execCmd = (params: IExecCmdParams): Promise<any> => {
 
   return new Promise((resolve, reject) => {
     commandQueue.push({
-      execOptions: params,
+      request: params,
 
       onSuccess: (...results: any[]) => {
         // -------------------------------
@@ -85,13 +86,13 @@ export const execCmd = (params: IExecCmdParams): Promise<any> => {
         // but the _stopRequested flag is true,
         // do not execute further code.
         if (!stopRequested) {
-          resolve(results);
+          resolve.apply(params.context, results);
         } else {
           // Page will be destroyed.
           return;
         }
 
-        if (params.methodName === "isWaitMethod") {
+        if (params.methodName === isWaitMethod) {
           isWaitMethod = null;
         }
 
@@ -104,13 +105,13 @@ export const execCmd = (params: IExecCmdParams): Promise<any> => {
         // error callback
         // -------------------------------
         if (!stopRequested) {
-          reject(results);
+          reject.apply(params.context, results);
         } else {
           // Page will be destroyed.
           return;
         }
 
-        if (params.methodName === "isWaitMethod") {
+        if (params.methodName === isWaitMethod) {
           isWaitMethod = null;
         }
 
@@ -119,23 +120,23 @@ export const execCmd = (params: IExecCmdParams): Promise<any> => {
       },
 
     });
+
+    // In order to execute all methods in safe,
+    // the maps plugin limits the number of execution in a moment to 10.
+    //
+    // Note that Cordova-Android drops has also another internal queue,
+    // and the internal queue drops our statement if the app send too much.
+    //
+    // Also executing too much statements at the same time,
+    // it would cause many errors in native side, such as out-of-memory.
+    //
+    // In order to prevent these troubles, the maps plugin limits the number of execution is 10.
+    if (isExecuting || executingCnt >= MAX_EXECUTE_CNT || isWaitMethod || commandQueue.length === 0) {
+      return;
+    }
+
+    privateExec();
   });
-
-  // In order to execute all methods in safe,
-  // the maps plugin limits the number of execution in a moment to 10.
-  //
-  // Note that Cordova-Android drops has also another internal queue,
-  // and the internal queue drops our statement if the app send too much.
-  //
-  // Also executing too much statements at the same time,
-  // it would cause many errors in native side, such as out-of-memory.
-  //
-  // In order to prevent these troubles, the maps plugin limits the number of execution is 10.
-  if (isExecuting || executingCnt >= MAX_EXECUTE_CNT || isWaitMethod || commandQueue.length === 0) {
-    return;
-  }
-
-  nextTick(privateExec);
 };
 
 
@@ -163,20 +164,21 @@ const privateExec = () => {
     task = commandQueue.shift();
 
     // push out normal tasks if stopRequested becomes true
-    if (stopRequested && !task.execOptions.remove) {
+    if (stopRequested && !task.request.execOptions.remove) {
       executingCnt--;
       continue;
     }
 
     // Some methods have to block other execution requests.
-    if (task.execOptions.sync) {
-      isWaitMethod = task.methodName;
-      // console.log(`[sync start] ${commandParams.args[2]}.${methodName}`);
-      exec(task.onSuccess, task.onError, task.context.id, task.methodName, task.args);
+    if (task.request.execOptions.sync) {
+      isWaitMethod = task.request.methodName;
+      // console.log(`[sync start] ${task.request.pluginName}.${task.request.methodName}`);
+      exec(task.onSuccess, task.onError, task.request.pluginName, task.request.methodName, task.request.args);
       break;
     }
 
-    exec(task.onSuccess, task.onError, task.pluginName || task.context.id, task.methodName, task.args);
+    // console.log(`[start] ${task.request.pluginName}.${task.request.methodName}`);
+    exec(task.onSuccess, task.onError, task.request.pluginName, task.request.methodName, task.request.args);
   }
 
   isExecuting = false;

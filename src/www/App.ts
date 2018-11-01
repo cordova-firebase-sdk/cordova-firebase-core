@@ -111,7 +111,7 @@ class SecretClass {
 
 (cordova as any).addConstructor(() => {
   (window as any).plugin = (window as any).plugin || {};
-  (window as any).plugin.firebase = (window as any).plugin.firebase ;
+  // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
   if (!(window as any).plugin.firebase) {
     Object.defineProperty((window as any).plugin, "firebase", {
       value: new SecretClass(),

@@ -1,4 +1,4 @@
-import { BaseClass } from "../www/BaseClass";
+import { BaseClass } from "./BaseClass";
 
 /**
  * @hidden

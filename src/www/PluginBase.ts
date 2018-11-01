@@ -1,5 +1,8 @@
 import { BaseClass } from "./BaseClass";
 
+/**
+ * PluginBase class base class of this plugin.
+ */
 export class PluginBase extends BaseClass {
 
   public isRemoved: boolean;

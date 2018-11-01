@@ -1,5 +1,6 @@
-import { Promise } from "es6-promise";
+// import { Promise } from "es6-promise";
 import { BaseClass } from "../BaseClass";
+declare let Promise: any;
 
 describe("BaseClass test", () => {
 

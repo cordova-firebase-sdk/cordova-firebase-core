@@ -1,5 +1,5 @@
-import { BaseClass } from "../www/BaseClass";
-import { loadJsPromise } from "../www/common";
+import { BaseClass } from "./BaseClass";
+import { loadJsPromise } from "./common";
 import { FirebaseAppPlugin } from "./FirebaseAppPlugin";
 
 export class CordovaFirebaseCore extends BaseClass {
