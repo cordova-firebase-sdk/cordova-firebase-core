@@ -13,6 +13,8 @@
     "node_modules"
   ],
   "rules": {
-    "no-implicit-dependencies": [true, "dev"]
+    "no-implicit-dependencies": [true, "dev"],
+    "array-type": [true, "generic"],
+    "max-line-length": [true, 150]
   }
 }

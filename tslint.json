@@ -3,6 +3,11 @@
     "extends": [
         "tslint:latest"
     ],
+    "linterOptions": {
+        "exclude": [
+            "dist"
+        ]
+    },
     "jsRules": {},
     "rules": {
       "no-consecutive-blank-lines": false,
@@ -15,7 +20,9 @@
         true,
         "src/www/App.ts"
       ],
-      "no-submodule-imports": false
+      "no-submodule-imports": false,
+      "array-type": [true, "generic"],
+      "max-line-length": [true, 150]
     },
     "interface-name": [true, "never-prefix"],
     "rulesDirectory": []
