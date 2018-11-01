@@ -1,5 +1,4 @@
 node_modules
 docs/
-www/
-!www/lz-string.js
 !src/www/
+dist/

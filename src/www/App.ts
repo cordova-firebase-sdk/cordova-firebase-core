@@ -1,35 +1,9 @@
 import { Promise } from "es6-promise";
-import { execCmd } from "./CommandQueue";
 import { isInitialized } from "./common";
+import { execCmd } from "./FirebaseCoreCommandQueue";
+import { IAppInitializeOptions } from "./IAppInitializeOptions";
 import { PluginBase } from "./PluginBase";
 
-export interface IAppInitializeOptions {
-
-  /**
-   * Auth / General Use
-   */
-  apiKey?: string;
-
-  /**
-   * Auth with popup/redirect
-   */
-  authDomain?: string;
-
-  /**
-   * Realtime Database
-   */
-  databaseURL?: string;
-
-  /**
-   * Storage
-   */
-  storageBucket?: string;
-
-  /**
-   * Cloud Messaging
-   */
-  messagingSenderId?: string;
-}
 
 export class App extends PluginBase {
 

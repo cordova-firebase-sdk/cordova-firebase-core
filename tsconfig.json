@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "www",
+    "outDir": "dist/npx/",
     "rootDir": "src/",
     "target": "es5",
     "declaration": true

@@ -14,7 +14,8 @@
       "max-classes-per-file": [
         true,
         "src/www/App.ts"
-      ]
+      ],
+      "no-submodule-imports": false
     },
     "interface-name": [true, "never-prefix"],
     "rulesDirectory": []

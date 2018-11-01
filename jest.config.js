@@ -16,6 +16,8 @@ module.exports = {
   ],
   globals: {
     cordova: {},
+    firebase: {},
+    window: {},
   },
   moduleNameMapper: {
     "^cordova": "<rootDir>/src/www/__test__/cordova/"

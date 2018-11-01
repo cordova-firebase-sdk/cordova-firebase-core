@@ -1,6 +1,6 @@
 {
   "name": "cordova-firebase-core",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "",
   "cordova": {
     "id": "cordova-firebase-core",
@@ -11,12 +11,11 @@
     ]
   },
   "scripts": {
-    "build": "npm run tslint && npx tsc",
+    "build": "npm run tslint && rm -rf dist && npx tsc && cp -R package.json plugin.xml README.md js src node_modules/es6-promise/dist/es6-promise.js dist/",
     "test": "npm run jest",
     "tslint": "npx tslint --project .",
     "jest": "npm run tslint && npx jest",
     "jest:watch": "npx jest --watch",
-    "eslint": "node node_modules/eslint/bin/eslint src tests",
     "tsdoc": "npx typedoc --options typedoc.js src/ts ",
     "npmpub": "npm run build"
   },
@@ -36,7 +35,6 @@
   },
   "devDependencies": {
     "@types/jest": "^23.3.7",
-    "eslint": "^3.19.0",
     "jest": "^23.6.0",
     "ts-jest": "^23.10.4",
     "tslint": "^5.11.0",

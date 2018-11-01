@@ -1,20 +1,29 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin id="cordova-firebase-core" version="0.0.3" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
   <name>cordova-firebase-core</name>
-  <js-module name="App" src="www/www/App.js" >
+  <js-module name="App" src="npx/www/App.js" >
     <clobbers target="plugin.firebase.core"/>
   </js-module>
-  <js-module name="Common" src="www/www/common.js" />
-  <js-module name="BaseClass" src="www/www/BaseClass.js" />
-  <js-module name="BaseArrayClass" src="www/www/BaseArrayClass.js" />
-  <js-module name="LZString" src="www/lz-string.js" />
-  <js-module name="FirebaseCoreCommandQueue" src="www/www/CommandQueue.js" />
+  <js-module name="common" src="npx/www/common.js" />
+  <js-module name="BaseClass" src="npx/www/BaseClass.js" />
+  <js-module name="BaseArrayClass" src="npx/www/BaseArrayClass.js" />
+  <js-module name="PluginBase" src="npx/www/PluginBase.js" />
+  <js-module name="FirebaseCoreCommandQueue" src="npx/www/FirebaseCoreCommandQueue.js" />
+  <js-module name="LZString" src="js/lz-string.js" />
+<!--
+  <js-module name="es6-promise" src="es6-promise.js" />
+  <js-module name="es6-promise" src="js/Promise.js" />
+  <asset src="js/promise-7.0.4.min.js.map" target="promise-7.0.4.min.js.map" />
+  <asset src="js/promise-7.0.4.min.js.map" target="plugins/cordova-firebase-core/www/promise-7.0.4.min.js.map" />
+-->
+
+  <dependency id="es6-promise-plugin" />
 
   <platform name="browser">
-    <js-module name="CordovaFirebaseCore" src="src/browser/CordovaFirebaseCore.js">
+    <js-module name="CordovaFirebaseCore" src="npx/browser/CordovaFirebaseCore.js">
       <runs/>
     </js-module>
-    <js-module name="FirebaseAppPlugin" src="src/browser/FirebaseAppPlugin.js" />
+    <js-module name="FirebaseAppPlugin" src="npx/browser/FirebaseAppPlugin.js" />
   </platform>
 
   <platform name="android">
