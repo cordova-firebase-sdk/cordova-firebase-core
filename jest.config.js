@@ -19,6 +19,6 @@ module.exports = {
     window: {},
   },
   moduleNameMapper: {
-    "^cordova": "<rootDir>/src/www/__test__/cordova/"
+    "^cordova$": "<rootDir>/src/www/__test__/cordova"
   }
 };
