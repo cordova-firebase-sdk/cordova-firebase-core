@@ -16,8 +16,7 @@
     "tslint": "npx tslint --project .",
     "jest": "npm run tslint && npx jest",
     "jest:watch": "npx jest --watch",
-    "tsdoc": "npx typedoc --options typedoc.js src/ts ",
-    "npmpub": "npm run build"
+    "tsdoc": "npx typedoc --options typedoc.js src/ts "
   },
   "keywords": [
     "ecosystem:cordova",
