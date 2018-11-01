@@ -1,16 +1,14 @@
 ![](https://travis-ci.org/cordova-firebase-sdk/cordova-firebase-core.svg?branch=master)
 
-**THIS PLUGIN IS NOT READY TO SHIP. DO NOT USE THIS PLUGIN IN YOUR APP YET.**
-
 # cordova-firebase-core
 
 
 ## Supported platforms
   This plugin supports the following platforms:
 
-    - Browser (implemented, tested)
-    - iOS (implemented, not tested deeply)
-    - Android (implemented, not tested deeply)
+    - Browser
+    - iOS
+    - Android
 
 ## Installation
 
