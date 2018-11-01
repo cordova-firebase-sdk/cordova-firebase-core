@@ -1,5 +1,6 @@
-import { Promise } from "es6-promise";
+// import { Promise } from "es6-promise";
 import { BaseClass } from "./BaseClass";
+declare let Promise: any;
 
 /**
  * MVC Array class.
@@ -160,7 +161,7 @@ export class BaseArrayClass extends BaseClass {
       });
     };
 
-    return new Promise<any[]>((resolve: (results: any[]) => void) => {
+    return new Promise((resolve: (results: any[]) => void) => {
       this.array.forEach((item: any, idx: number) => {
         looper(item, idx, resolve);
       });

@@ -1,7 +1,9 @@
 import { exec } from "cordova";
-import { Promise } from "es6-promise";
+// import { Promise } from "es6-promise";
 import { nextTick } from "./common";
 import { PluginBase } from "./PluginBase";
+
+declare let Promise: any;
 
 /**
  * Parameters for execCmd function

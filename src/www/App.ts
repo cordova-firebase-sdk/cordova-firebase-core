@@ -1,9 +1,10 @@
-import { Promise } from "es6-promise";
+// import { Promise } from "es6-promise";
 import { isInitialized } from "./common";
 import { execCmd } from "./FirebaseCoreCommandQueue";
 import { IAppInitializeOptions } from "./IAppInitializeOptions";
 import { PluginBase } from "./PluginBase";
 
+declare let Promise: any;
 
 export class App extends PluginBase {
 

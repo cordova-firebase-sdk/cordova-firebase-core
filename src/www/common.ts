@@ -1,4 +1,6 @@
-import { Promise } from "es6-promise";
+// import { Promise } from "es6-promise";
+
+declare let Promise: any;
 
 /**
  * Returns true if given `packageName` is available.
@@ -44,7 +46,7 @@ export interface IloadJsPromiseOptions {
  * @returns Promise<void>
  */
 export const loadJsPromise = (options: IloadJsPromiseOptions): Promise<void> => {
-  return new Promise<void>((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (isInitialized(options.package)) {
       resolve();
     } else {
