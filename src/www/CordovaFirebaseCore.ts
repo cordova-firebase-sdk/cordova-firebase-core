@@ -31,7 +31,7 @@ export class CordovaFirebaseCore extends BaseClass {
 
       // Create an application instance
       const app: any = (window as any).firebase.initializeApp(options.options, name);
-      console.log("--->[browser] CordovaFirebaseCore.newInstance() : " + options.id);
+      // console.log("--->[browser] CordovaFirebaseCore.newInstance() : " + options.id);
 
       // Create firebase app reference
       const instance: FirebaseAppPlugin = new FirebaseAppPlugin(options.id, app);

@@ -17,4 +17,5 @@ export declare class App extends PluginBase {
      * @returns database instance
      */
     database(url?: string): any;
+    readonly options: IAppInitializeOptions;
 }

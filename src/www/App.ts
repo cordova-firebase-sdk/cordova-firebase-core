@@ -60,28 +60,24 @@ export class App extends PluginBase {
    * @returns database instance
    */
   public database(url?: string): any {
-    if (isInitialized("plugin.firebase.database._DBs")) {
-      const CordovaFirebaseDatabase: any = require("cordvoa-firebase-datbase.cordova-firebase-database");
-      const options: any = Object.create(this._options);
+    if (isInitialized("plugin.firebase.database")) {
+      const options: any = this.options;
       if (url) {
         options.databaseURL = url;
       }
-      const db = new CordovaFirebaseDatabase(this.id, options);
-      if (this._isInitialized) {
-        db._trigger("fireAppReady");
-      } else {
-        this._on("ready", () => {
-          db._trigger("fireAppReady");
-        });
-      }
+      return (window as any).plugin.firebase.database(this, options);
     } else {
       throw new Error("cordova-firebase-databse plugin is required");
     }
   }
+
+  public get options(): IAppInitializeOptions {
+    return JSON.parse(JSON.stringify(this._options));
+  }
 }
 
 
-class SecretClass {
+class SecretAppManager {
 
   public get apps(): Array<App> {
     const keys: Array<string> = Object.keys(this._apps);
@@ -110,12 +106,14 @@ class SecretClass {
   }
 }
 if ((cordova as any) && (cordova as any).version) {
-  const manager: SecretClass = new SecretClass();
+  const manager: SecretAppManager = new SecretAppManager();
 
   const firebaseNS: any = {
     apps: manager.apps,
 
     ANDROID_SDK_VERSION: "5.5.0",
+
+    database: undefined,
 
     initializeApp: manager.initializeApp,
 

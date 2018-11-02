@@ -65,34 +65,32 @@ var App = /** @class */ (function (_super) {
      * @returns database instance
      */
     App.prototype.database = function (url) {
-        if (common_1.isInitialized("plugin.firebase.database._DBs")) {
-            var CordovaFirebaseDatabase = require("cordvoa-firebase-datbase.cordova-firebase-database");
-            var options = Object.create(this._options);
+        if (common_1.isInitialized("plugin.firebase.database")) {
+            var options = this.options;
             if (url) {
                 options.databaseURL = url;
             }
-            var db_1 = new CordovaFirebaseDatabase(this.id, options);
-            if (this._isInitialized) {
-                db_1._trigger("fireAppReady");
-            }
-            else {
-                this._on("ready", function () {
-                    db_1._trigger("fireAppReady");
-                });
-            }
+            return window.plugin.firebase.database(this, options);
         }
         else {
             throw new Error("cordova-firebase-databse plugin is required");
         }
     };
+    Object.defineProperty(App.prototype, "options", {
+        get: function () {
+            return JSON.parse(JSON.stringify(this._options));
+        },
+        enumerable: true,
+        configurable: true
+    });
     return App;
 }(PluginBase_1.PluginBase));
 exports.App = App;
-var SecretClass = /** @class */ (function () {
-    function SecretClass() {
+var SecretAppManager = /** @class */ (function () {
+    function SecretAppManager() {
         this._apps = {};
     }
-    Object.defineProperty(SecretClass.prototype, "apps", {
+    Object.defineProperty(SecretAppManager.prototype, "apps", {
         get: function () {
             var _this = this;
             var keys = Object.keys(this._apps);
@@ -110,7 +108,7 @@ var SecretClass = /** @class */ (function () {
      * @param [name] - Application name.
      * @returns Application instance
      */
-    SecretClass.prototype.initializeApp = function (initOptions, name) {
+    SecretAppManager.prototype.initializeApp = function (initOptions, name) {
         name = name || "[DEFAULT]";
         if (name in this._apps) {
             throw new Error("Name '" + name + "' application has been already existed.");
@@ -119,13 +117,14 @@ var SecretClass = /** @class */ (function () {
         this._apps[name] = app;
         return app;
     };
-    return SecretClass;
+    return SecretAppManager;
 }());
 if (cordova && cordova.version) {
-    var manager_1 = new SecretClass();
+    var manager_1 = new SecretAppManager();
     var firebaseNS_1 = {
         apps: manager_1.apps,
         ANDROID_SDK_VERSION: "5.5.0",
+        database: undefined,
         initializeApp: manager_1.initializeApp,
         IOS_SDK_VERSION: "5.5.0",
         Promise: Promise.class,

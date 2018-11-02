@@ -42,7 +42,7 @@ var CordovaFirebaseCore = /** @class */ (function (_super) {
             var name = args[1] || "[DEFAULT]";
             // Create an application instance
             var app = window.firebase.initializeApp(options.options, name);
-            console.log("--->[browser] CordovaFirebaseCore.newInstance() : " + options.id);
+            // console.log("--->[browser] CordovaFirebaseCore.newInstance() : " + options.id);
             // Create firebase app reference
             var instance = new FirebaseAppPlugin_1.FirebaseAppPlugin(options.id, app);
             var dummyObj = {};
