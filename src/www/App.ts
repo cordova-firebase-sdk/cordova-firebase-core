@@ -5,6 +5,7 @@ import { IAppInitializeOptions } from "./IAppInitializeOptions";
 import { PluginBase } from "./PluginBase";
 
 declare let Promise: any;
+declare let window: any;
 
 export class App extends PluginBase {
 
@@ -60,14 +61,21 @@ export class App extends PluginBase {
    * @returns database instance
    */
   public database(url?: string): any {
+    const options: any = this.options;
+    if (url) {
+      options.databaseURL = url;
+    }
     if (isInitialized("plugin.firebase.database")) {
-      const options: any = this.options;
-      if (url) {
-        options.databaseURL = url;
-      }
-      return (window as any).plugin.firebase.database(this, options);
+      return window.plugin.firebase.database(this, options);
     } else {
-      throw new Error("cordova-firebase-databse plugin is required");
+      const moduleName: string = "cordova-firebase-database";
+
+      if (!window.cordova.define.moduleMap[moduleName + ".Database"]) {
+        // cordova-firebase-database is not installed.
+        throw new Error(moduleName + " plugin is required");
+      }
+      cordova.require(moduleName + ".Database");
+      return window.plugin.firebase.database(this, options);
     }
   }
 
@@ -105,7 +113,7 @@ class SecretAppManager {
     return app;
   }
 }
-if ((cordova as any) && (cordova as any).version) {
+if (window.cordova && window.cordova.version) {
   const manager: SecretAppManager = new SecretAppManager();
 
   const firebaseNS: any = {
@@ -124,14 +132,14 @@ if ((cordova as any) && (cordova as any).version) {
     WEBJS_SDK_VERSION: "5.5.0",
   };
 
-  (cordova as any).addConstructor(() => {
-    (window as any).plugin = (window as any).plugin || {};
+  window.cordova.addConstructor(() => {
+    window.plugin = window.plugin || {};
     // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
-    if (!(window as any).plugin.firebase) {
-      Object.defineProperty((window as any).plugin, "firebase", {
+    if (!window.plugin.firebase) {
+      Object.defineProperty(window.plugin, "firebase", {
         value: firebaseNS,
       });
-      Object.defineProperty((window as any).plugin.firebase, "app", {
+      Object.defineProperty(window.plugin.firebase, "app", {
         value: (name?: string): App => {
           name = name || "[DEFAULT]";
           const app: App = manager._apps[name];

@@ -65,15 +65,21 @@ var App = /** @class */ (function (_super) {
      * @returns database instance
      */
     App.prototype.database = function (url) {
+        var options = this.options;
+        if (url) {
+            options.databaseURL = url;
+        }
         if (common_1.isInitialized("plugin.firebase.database")) {
-            var options = this.options;
-            if (url) {
-                options.databaseURL = url;
-            }
             return window.plugin.firebase.database(this, options);
         }
         else {
-            throw new Error("cordova-firebase-databse plugin is required");
+            var moduleName = "cordova-firebase-database";
+            if (!window.cordova.define.moduleMap[moduleName + ".Database"]) {
+                // cordova-firebase-database is not installed.
+                throw new Error(moduleName + " plugin is required");
+            }
+            cordova.require(moduleName + ".Database");
+            return window.plugin.firebase.database(this, options);
         }
     };
     Object.defineProperty(App.prototype, "options", {
@@ -119,7 +125,7 @@ var SecretAppManager = /** @class */ (function () {
     };
     return SecretAppManager;
 }());
-if (cordova && cordova.version) {
+if (window.cordova && window.cordova.version) {
     var manager_1 = new SecretAppManager();
     var firebaseNS_1 = {
         apps: manager_1.apps,
@@ -130,7 +136,7 @@ if (cordova && cordova.version) {
         Promise: Promise.class,
         WEBJS_SDK_VERSION: "5.5.0",
     };
-    cordova.addConstructor(function () {
+    window.cordova.addConstructor(function () {
         window.plugin = window.plugin || {};
         // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
         if (!window.plugin.firebase) {
