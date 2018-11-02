@@ -1,24 +1,26 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin id="cordova-firebase-core" version="0.1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
   <name>cordova-firebase-core</name>
-  <js-module name="App" src="src/www/App.js" >
+  <js-module name="index" src="index.js" >
     <runs />
   </js-module>
-  <js-module name="index" src="src/www/index.js" />
-  <js-module name="common" src="src/www/common.js" />
-  <js-module name="BaseClass" src="src/www/BaseClass.js" />
-  <js-module name="BaseArrayClass" src="src/www/BaseArrayClass.js" />
-  <js-module name="PluginBase" src="src/www/PluginBase.js" />
-  <js-module name="FirebaseCoreCommandQueue" src="src/www/FirebaseCoreCommandQueue.js" />
+
+  <js-module name="App" src="App.js" />
+  <js-module name="common" src="common.js" />
+  <js-module name="BaseClass" src="BaseClass.js" />
+  <js-module name="BaseArrayClass" src="BaseArrayClass.js" />
+  <js-module name="PluginBase" src="PluginBase.js" />
+  <js-module name="FirebaseCoreCommandQueue" src="FirebaseCoreCommandQueue.js" />
+
   <js-module name="LZString" src="js/lz-string.js" />
 
   <dependency id="es6-promise-plugin" />
 
   <platform name="browser">
-    <js-module name="CordovaFirebaseCore" src="src/www/CordovaFirebaseCore.js">
+    <js-module name="CordovaFirebaseCore" src="CordovaFirebaseCore.js">
       <runs/>
     </js-module>
-    <js-module name="FirebaseAppPlugin" src="src/www/FirebaseAppPlugin.js" />
+    <js-module name="FirebaseAppPlugin" src="FirebaseAppPlugin.js" />
   </platform>
 
   <platform name="android">

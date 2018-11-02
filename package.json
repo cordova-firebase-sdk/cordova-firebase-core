@@ -11,7 +11,7 @@
     ]
   },
   "scripts": {
-    "build": "rm -rf dist/* && npm run tslint && npx tsc && cp -R package.json plugin.xml README.md js src index.js dist/",
+    "build": "rm -rf dist/* && npm run tslint && npx tsc && cp -R package.json plugin.xml README.md js src dist/",
     "test": "npm run jest",
     "tslint": "npx tslint --project .",
     "jest": "npm run tslint && npx jest",
