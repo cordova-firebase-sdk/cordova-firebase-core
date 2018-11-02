@@ -115,7 +115,7 @@ if ((cordova as any) && (cordova as any).version) {
 
     database: undefined,
 
-    initializeApp: manager.initializeApp,
+    initializeApp: manager.initializeApp.bind(manager),
 
     IOS_SDK_VERSION: "5.5.0",
 

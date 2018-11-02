@@ -125,7 +125,7 @@ if (cordova && cordova.version) {
         apps: manager_1.apps,
         ANDROID_SDK_VERSION: "5.5.0",
         database: undefined,
-        initializeApp: manager_1.initializeApp,
+        initializeApp: manager_1.initializeApp.bind(manager_1),
         IOS_SDK_VERSION: "5.5.0",
         Promise: Promise.class,
         WEBJS_SDK_VERSION: "5.5.0",
