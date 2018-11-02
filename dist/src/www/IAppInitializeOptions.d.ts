@@ -8,6 +8,10 @@ export interface IAppInitializeOptions {
      */
     authDomain?: string;
     /**
+     * Credential
+     */
+    credential?: string;
+    /**
      * Realtime Database
      */
     databaseURL?: string;
@@ -19,4 +23,8 @@ export interface IAppInitializeOptions {
      * Cloud Messaging
      */
     messagingSenderId?: string;
+    /**
+     * Accept extra properties
+     */
+    [key: string]: any;
 }

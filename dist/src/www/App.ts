@@ -83,19 +83,16 @@ export class App extends PluginBase {
 
 class SecretClass {
 
-  public readonly SDK_VERSION = "0.0.2";
-
-  public readonly WEBJS_SDK_VERSION = "5.5.0";
-
-  public readonly ANDROID_SDK_VERSION = "5.5.0";
-
-  public readonly IOS_SDK_VERSION = "5.5.0";
-
   public get apps(): Array<App> {
-    return this._apps;
+    const keys: Array<string> = Object.keys(this._apps);
+    const apps: Array<App> = [];
+    keys.forEach((key: string) => {
+      apps.push(this._apps[key]);
+    });
+    return apps;
   }
 
-  private _apps: Array<App> = [];
+  public _apps: any = {};
 
   /**
    * @param initOptions - Application initialize options
@@ -104,18 +101,48 @@ class SecretClass {
    */
   public initializeApp(initOptions: IAppInitializeOptions, name?: string): App {
     name = name || "[DEFAULT]";
+    if (name in this._apps) {
+      throw new Error("Name '" + name + "' application has been already existed.");
+    }
     const app: App = new App(name, initOptions);
-    this._apps.push(app);
+    this._apps[name] = app;
     return app;
   }
 }
 if ((cordova as any) && (cordova as any).version) {
+  const manager: SecretClass = new SecretClass();
+
+  const firebaseNS: any = {
+    apps: manager.apps,
+
+    ANDROID_SDK_VERSION: "5.5.0",
+
+    initializeApp: manager.initializeApp,
+
+    IOS_SDK_VERSION: "5.5.0",
+
+    Promise: Promise.class,
+
+    WEBJS_SDK_VERSION: "5.5.0",
+  };
+
   (cordova as any).addConstructor(() => {
     (window as any).plugin = (window as any).plugin || {};
     // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
     if (!(window as any).plugin.firebase) {
       Object.defineProperty((window as any).plugin, "firebase", {
-        value: new SecretClass(),
+        value: firebaseNS,
+      });
+      Object.defineProperty((window as any).plugin.firebase, "app", {
+        value: (name?: string): App => {
+          name = name || "[DEFAULT]";
+          const app: App = manager._apps[name];
+          if (app) {
+            return app;
+          } else {
+            throw new Error("Default app has been not initialized.");
+          }
+        },
       });
     }
   });

@@ -90,15 +90,17 @@ var App = /** @class */ (function (_super) {
 exports.App = App;
 var SecretClass = /** @class */ (function () {
     function SecretClass() {
-        this.SDK_VERSION = "0.0.2";
-        this.WEBJS_SDK_VERSION = "5.5.0";
-        this.ANDROID_SDK_VERSION = "5.5.0";
-        this.IOS_SDK_VERSION = "5.5.0";
-        this._apps = [];
+        this._apps = {};
     }
     Object.defineProperty(SecretClass.prototype, "apps", {
         get: function () {
-            return this._apps;
+            var _this = this;
+            var keys = Object.keys(this._apps);
+            var apps = [];
+            keys.forEach(function (key) {
+                apps.push(_this._apps[key]);
+            });
+            return apps;
         },
         enumerable: true,
         configurable: true
@@ -110,19 +112,43 @@ var SecretClass = /** @class */ (function () {
      */
     SecretClass.prototype.initializeApp = function (initOptions, name) {
         name = name || "[DEFAULT]";
+        if (name in this._apps) {
+            throw new Error("Name '" + name + "' application has been already existed.");
+        }
         var app = new App(name, initOptions);
-        this._apps.push(app);
+        this._apps[name] = app;
         return app;
     };
     return SecretClass;
 }());
 if (cordova && cordova.version) {
+    var manager_1 = new SecretClass();
+    var firebaseNS_1 = {
+        apps: manager_1.apps,
+        ANDROID_SDK_VERSION: "5.5.0",
+        initializeApp: manager_1.initializeApp,
+        IOS_SDK_VERSION: "5.5.0",
+        Promise: Promise.class,
+        WEBJS_SDK_VERSION: "5.5.0",
+    };
     cordova.addConstructor(function () {
         window.plugin = window.plugin || {};
         // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
         if (!window.plugin.firebase) {
             Object.defineProperty(window.plugin, "firebase", {
-                value: new SecretClass(),
+                value: firebaseNS_1,
+            });
+            Object.defineProperty(window.plugin.firebase, "app", {
+                value: function (name) {
+                    name = name || "[DEFAULT]";
+                    var app = manager_1._apps[name];
+                    if (app) {
+                        return app;
+                    }
+                    else {
+                        throw new Error("Default app has been not initialized.");
+                    }
+                },
             });
         }
     });
