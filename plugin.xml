@@ -4,6 +4,7 @@
   <js-module name="App" src="src/www/App.js" >
     <runs />
   </js-module>
+  <js-module name="index" src="src/www/index.js" />
   <js-module name="common" src="src/www/common.js" />
   <js-module name="BaseClass" src="src/www/BaseClass.js" />
   <js-module name="BaseArrayClass" src="src/www/BaseArrayClass.js" />
