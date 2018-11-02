@@ -9,6 +9,6 @@ export declare class FirebaseAppPlugin extends BaseClass {
     private _id;
     constructor(id: string, app: any);
     readonly id: string;
-    readonly app: string;
+    readonly app: any;
     delete(onSuccess: any, onError: any): void;
 }

@@ -14,8 +14,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 // import { Promise } from "es6-promise";
+var cordova_1 = require("cordova");
 var common_1 = require("./common");
-var FirebaseCoreCommandQueue_1 = require("./FirebaseCoreCommandQueue");
 var PluginBase_1 = require("./PluginBase");
 var App = /** @class */ (function (_super) {
     __extends(App, _super);
@@ -35,7 +35,6 @@ var App = /** @class */ (function (_super) {
             messagingSenderId: null,
             storageBucket: null,
         };
-        _this._isReady = true;
         _this._options = {
             apiKey: initOptions.apiKey || null,
             authDomain: initOptions.authDomain || null,
@@ -44,19 +43,16 @@ var App = /** @class */ (function (_super) {
             storageBucket: initOptions.storageBucket || null,
         };
         // Create one new instance in native side.
-        FirebaseCoreCommandQueue_1.execCmd({
-            args: [{
-                    id: _this.id,
-                    name: _this.name,
-                    options: _this._options,
-                }],
-            context: _this,
-            methodName: "newInstance",
-            pluginName: "CordovaFirebaseCore",
-        }).then(function () {
-            _this._isInitialized = true;
+        cordova_1.exec(function () {
+            _this._isReady = true;
             _this._trigger("ready");
-        });
+        }, function (error) {
+            throw new Error(error);
+        }, "CordovaFirebaseCore", "newInstance", [{
+                id: _this.id,
+                name: _this.name,
+                options: _this._options,
+            }]);
         return _this;
     }
     /**
@@ -69,8 +65,11 @@ var App = /** @class */ (function (_super) {
         if (url) {
             options.databaseURL = url;
         }
-        if (common_1.isInitialized("plugin.firebase.database")) {
-            return window.plugin.firebase.database(this, options);
+        // Load `cordova-firebase-database.Database` module if not yet.
+        var database;
+        if (common_1.isInitialized("plugin.firebase.database") &&
+            typeof window.plugin.firebase.database === "function") {
+            database = window.plugin.firebase.database(this, options);
         }
         else {
             var moduleName = "cordova-firebase-database";
@@ -79,8 +78,18 @@ var App = /** @class */ (function (_super) {
                 throw new Error(moduleName + " plugin is required");
             }
             cordova.require(moduleName + ".Database");
-            return window.plugin.firebase.database(this, options);
+            database = window.plugin.firebase.database(this, options);
         }
+        // Waits if native side of FirebaseAppPlugin is not ready yet.
+        if (this._isReady) {
+            database._trigger("fireAppReady");
+        }
+        else {
+            this._one("ready", function () {
+                database._trigger("fireAppReady");
+            });
+        }
+        return database;
     };
     Object.defineProperty(App.prototype, "options", {
         get: function () {

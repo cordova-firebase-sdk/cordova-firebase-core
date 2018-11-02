@@ -14,7 +14,7 @@ declare let Promise: any;
 export const isInitialized = (packageName: string): boolean => {
 
   let parent: any = window;
-  const steps: Array<string> = packageName.split(/\\./);
+  const steps: Array<string> = packageName.split(".");
   const results: Array<string> = steps.filter((step: string): boolean => {
     if (step in parent) {
       parent = parent[step];
@@ -50,7 +50,7 @@ export const loadJsPromise = (options: IloadJsPromiseOptions): Promise<void> => 
     if (isInitialized(options.package)) {
       resolve();
     } else {
-      const scriptTag: HTMLScriptElement = document.createElement("src") as HTMLScriptElement;
+      const scriptTag: HTMLScriptElement = document.createElement("script") as HTMLScriptElement;
       scriptTag.src = options.url;
       scriptTag.onerror = reject;
       scriptTag.onload = () => {
@@ -62,9 +62,10 @@ export const loadJsPromise = (options: IloadJsPromiseOptions): Promise<void> => 
             resolve();
           }
           if (timeout === 0) {
-            reject(new Error("[Timeout] JS does not initialized in 2 seconds."));
+            clearInterval(timer);
+            reject(new Error("[Timeout] JS does not initialized in 10 seconds."));
           }
-        }, 10);
+        }, 500);
       };
       document.body.appendChild(scriptTag);
     }

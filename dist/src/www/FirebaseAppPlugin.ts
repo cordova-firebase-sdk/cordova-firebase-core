@@ -20,7 +20,7 @@ export class FirebaseAppPlugin extends BaseClass {
     return this._id;
   }
 
-  get app(): string {
+  get app(): any {
     return this._app;
   }
 

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 exports.isInitialized = function (packageName) {
     var parent = window;
-    var steps = packageName.split(/\\./);
+    var steps = packageName.split(".");
     var results = steps.filter(function (step) {
         if (step in parent) {
             parent = parent[step];
@@ -35,7 +35,7 @@ exports.loadJsPromise = function (options) {
             resolve();
         }
         else {
-            var scriptTag = document.createElement("src");
+            var scriptTag = document.createElement("script");
             scriptTag.src = options.url;
             scriptTag.onerror = reject;
             scriptTag.onload = function () {
@@ -47,9 +47,10 @@ exports.loadJsPromise = function (options) {
                         resolve();
                     }
                     if (timeout === 0) {
-                        reject(new Error("[Timeout] JS does not initialized in 2 seconds."));
+                        clearInterval(timer);
+                        reject(new Error("[Timeout] JS does not initialized in 10 seconds."));
                     }
-                }, 10);
+                }, 500);
             };
             document.body.appendChild(scriptTag);
         }

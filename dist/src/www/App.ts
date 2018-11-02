@@ -1,6 +1,6 @@
 // import { Promise } from "es6-promise";
+import { exec } from "cordova";
 import { isInitialized } from "./common";
-import { execCmd } from "./FirebaseCoreCommandQueue";
 import { IAppInitializeOptions } from "./IAppInitializeOptions";
 import { PluginBase } from "./PluginBase";
 
@@ -19,8 +19,6 @@ export class App extends PluginBase {
     storageBucket: null,
   };
 
-  private _isInitialized: boolean;
-
   /**
    * @constructor
    * @param [name] - Application name. Default value is "[DEFAULT]"
@@ -30,7 +28,6 @@ export class App extends PluginBase {
   constructor(name?: string, initOptions?: IAppInitializeOptions) {
     super("fireapp");
 
-    this._isReady = true;
     this._options = {
       apiKey: initOptions.apiKey || null,
       authDomain: initOptions.authDomain || null,
@@ -40,19 +37,20 @@ export class App extends PluginBase {
     };
 
     // Create one new instance in native side.
-    execCmd({
-      args: [{
-        id: this.id,
-        name: this.name,
-        options: this._options,
-      }],
-      context: this,
-      methodName: "newInstance",
-      pluginName: "CordovaFirebaseCore",
-    }).then(() => {
-      this._isInitialized = true;
+    exec(() => {
+      this._isReady = true;
       this._trigger("ready");
-    });
+    },
+    (error: any) => {
+      throw new Error(error);
+    },
+    "CordovaFirebaseCore",
+    "newInstance",
+    [{
+      id: this.id,
+      name: this.name,
+      options: this._options,
+    }]);
   }
 
   /**
@@ -65,8 +63,12 @@ export class App extends PluginBase {
     if (url) {
       options.databaseURL = url;
     }
-    if (isInitialized("plugin.firebase.database")) {
-      return window.plugin.firebase.database(this, options);
+
+    // Load `cordova-firebase-database.Database` module if not yet.
+    let database: any;
+    if (isInitialized("plugin.firebase.database") &&
+      typeof window.plugin.firebase.database === "function") {
+      database = window.plugin.firebase.database(this, options);
     } else {
       const moduleName: string = "cordova-firebase-database";
 
@@ -75,8 +77,18 @@ export class App extends PluginBase {
         throw new Error(moduleName + " plugin is required");
       }
       cordova.require(moduleName + ".Database");
-      return window.plugin.firebase.database(this, options);
+      database = window.plugin.firebase.database(this, options);
     }
+
+    // Waits if native side of FirebaseAppPlugin is not ready yet.
+    if (this._isReady) {
+      database._trigger("fireAppReady");
+    } else {
+      this._one("ready", () => {
+        database._trigger("fireAppReady");
+      });
+    }
+    return database;
   }
 
   public get options(): IAppInitializeOptions {

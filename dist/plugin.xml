@@ -10,8 +10,6 @@
   <js-module name="BaseClass" src="BaseClass.js" />
   <js-module name="BaseArrayClass" src="BaseArrayClass.js" />
   <js-module name="PluginBase" src="PluginBase.js" />
-  <js-module name="FirebaseCoreCommandQueue" src="FirebaseCoreCommandQueue.js" />
-
   <js-module name="LZString" src="js/lz-string.js" />
 
   <dependency id="es6-promise-plugin" />

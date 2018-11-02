@@ -3,7 +3,6 @@ import { PluginBase } from "./PluginBase";
 export declare class App extends PluginBase {
     name: string;
     private _options;
-    private _isInitialized;
     /**
      * @constructor
      * @param [name] - Application name. Default value is "[DEFAULT]"
