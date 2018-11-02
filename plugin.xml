@@ -60,6 +60,8 @@
     <source-file src="src/ios/CordovaFirebaseCore.m"/>
     <header-file src="src/ios/FirebaseAppPlugin.h"/>
     <source-file src="src/ios/FirebaseAppPlugin.m"/>
+
+    <hook type="before_compile" src="src/ios/pod_update.js" />
   </platform>
 
 </plugin>
