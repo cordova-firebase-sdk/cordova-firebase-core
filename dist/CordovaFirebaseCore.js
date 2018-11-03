@@ -62,7 +62,7 @@ var CordovaFirebaseCore = /** @class */ (function (_super) {
 }(BaseClass_1.BaseClass));
 exports.CordovaFirebaseCore = CordovaFirebaseCore;
 // Register this plugin
-if (window.cordova) {
+if (window.cordova && window.cordova.version) {
     (function () {
         var instance = new CordovaFirebaseCore();
         var dummyObj = {};

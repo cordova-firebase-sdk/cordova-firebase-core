@@ -55,7 +55,7 @@ export class CordovaFirebaseCore extends BaseClass {
 
 
 // Register this plugin
-if ((window as any).cordova) {
+if ((window as any).cordova && (window as any).cordova.version) {
   (() => {
     const instance: any = new CordovaFirebaseCore();
     const dummyObj = {};
