@@ -28,13 +28,19 @@ export class App extends PluginBase {
   constructor(name?: string, initOptions?: IAppInitializeOptions) {
     super("fireapp");
 
-    this._options = {
-      apiKey: initOptions.apiKey || null,
-      authDomain: initOptions.authDomain || null,
-      databaseURL: initOptions.databaseURL || null,
-      messagingSenderId: initOptions.messagingSenderId || null,
-      storageBucket: initOptions.storageBucket || null,
-    };
+    if (typeof name === "string") {
+      this.name = name;
+    }
+
+    if (initOptions) {
+      this._options = {
+        apiKey: initOptions.apiKey || null,
+        authDomain: initOptions.authDomain || null,
+        databaseURL: initOptions.databaseURL || null,
+        messagingSenderId: initOptions.messagingSenderId || null,
+        storageBucket: initOptions.storageBucket || null,
+      };
+    }
 
     // Create one new instance in native side.
     exec(() => {

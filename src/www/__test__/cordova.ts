@@ -1,3 +1,6 @@
 export const exec = (onSuccess, onError, pluginName, methodName, args) => {
-  onSuccess(args);
+  // Insert tiny delay
+  setTimeout(() => {
+    onSuccess(args);
+  }, 5);
 };

@@ -35,13 +35,18 @@ var App = /** @class */ (function (_super) {
             messagingSenderId: null,
             storageBucket: null,
         };
-        _this._options = {
-            apiKey: initOptions.apiKey || null,
-            authDomain: initOptions.authDomain || null,
-            databaseURL: initOptions.databaseURL || null,
-            messagingSenderId: initOptions.messagingSenderId || null,
-            storageBucket: initOptions.storageBucket || null,
-        };
+        if (typeof name === "string") {
+            _this.name = name;
+        }
+        if (initOptions) {
+            _this._options = {
+                apiKey: initOptions.apiKey || null,
+                authDomain: initOptions.authDomain || null,
+                databaseURL: initOptions.databaseURL || null,
+                messagingSenderId: initOptions.messagingSenderId || null,
+                storageBucket: initOptions.storageBucket || null,
+            };
+        }
         // Create one new instance in native side.
         cordova_1.exec(function () {
             _this._isReady = true;

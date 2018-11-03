@@ -26,7 +26,7 @@ describe("BaseClass test", () => {
   });
 
   describe("_one()", () => {
-    it("'instance._one()' should receive 'hello_changed' event.", (done) => {
+    it("'instance._one()' should receive 'hello_changed' event only one time.", (done) => {
       const instance: BaseClass = new BaseClass();
       instance._set("hello", "world");
 
@@ -37,6 +37,7 @@ describe("BaseClass test", () => {
       });
 
       instance._set("hello", "Aloha");
+      instance._set("hello", "こんにちは");
     });
   });
 

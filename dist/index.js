@@ -9,6 +9,7 @@ __export(require("./BaseArrayClass"));
 __export(require("./BaseClass"));
 __export(require("./common"));
 __export(require("./PluginBase"));
+__export(require("./lz-string"));
 if (window.cordova.version) {
     var keys = Object.keys(exports);
     keys.forEach(function (key) {

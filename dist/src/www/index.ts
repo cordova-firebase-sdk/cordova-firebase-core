@@ -5,6 +5,7 @@ export * from "./BaseClass";
 export * from "./common";
 export * from "./IAppInitializeOptions";
 export * from "./PluginBase";
+export * from "./lz-string";
 
 // Registers modules as part of cordova plugin
 declare let window: any;
