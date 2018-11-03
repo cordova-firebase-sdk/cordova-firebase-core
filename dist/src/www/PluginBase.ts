@@ -20,11 +20,12 @@ export class PluginBase extends BaseClass {
     this._id = this.hashCode + "_" + idSuffix;
   }
 
-  get id(): string {
+  public get id(): string {
     return this._id;
   }
 
-  get isReady(): boolean {
+  public get isReady(): boolean {
     return this._isReady;
   }
+
 }
