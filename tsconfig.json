@@ -9,7 +9,8 @@
     "declaration": true,
     "paths": {
       "cordova-firebase-core": ["./dist/"]
-    }
+    },
+    "lib": ["es5", "es6", "DOM"]
   },
   "exclude": [
     "dist/**",
@@ -17,6 +18,7 @@
     "node_modules/**"
   ],
   "rules": {
+    "no-bitwise": false,
     "no-implicit-dependencies": [true, "dev"],
     "array-type": [true, "generic"],
     "max-line-length": [true, 150]

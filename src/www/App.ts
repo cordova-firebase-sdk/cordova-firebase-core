@@ -1,10 +1,8 @@
-// import { Promise } from "es6-promise";
 import { exec } from "cordova";
 import { isInitialized } from "./common";
 import { IAppInitializeOptions } from "./IAppInitializeOptions";
 import { PluginBase } from "./PluginBase";
 
-declare let Promise: any;
 declare let window: any;
 
 export class App extends PluginBase {
@@ -145,7 +143,7 @@ if (window.cordova && window.cordova.version) {
 
     IOS_SDK_VERSION: "5.5.0",
 
-    Promise: Promise.class,
+    Promise,
 
     WEBJS_SDK_VERSION: "5.5.0",
   };

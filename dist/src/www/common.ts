@@ -1,7 +1,3 @@
-// import { Promise } from "es6-promise";
-
-declare let Promise: any;
-
 /**
  * Returns true if given `packageName` is available.
  *

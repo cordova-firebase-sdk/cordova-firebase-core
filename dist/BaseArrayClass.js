@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-// import { Promise } from "es6-promise";
 var BaseClass_1 = require("./BaseClass");
 /**
  * MVC Array class.

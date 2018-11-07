@@ -1,6 +1,4 @@
-// import { Promise } from "es6-promise";
 import { BaseClass } from "./BaseClass";
-declare let Promise: any;
 
 /**
  * MVC Array class.

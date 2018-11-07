@@ -1,5 +1,4 @@
 "use strict";
-// import { Promise } from "es6-promise";
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Returns true if given `packageName` is available.

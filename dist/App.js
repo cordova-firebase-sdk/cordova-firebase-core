@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-// import { Promise } from "es6-promise";
 var cordova_1 = require("cordova");
 var common_1 = require("./common");
 var PluginBase_1 = require("./PluginBase");
@@ -147,7 +146,7 @@ if (window.cordova && window.cordova.version) {
         database: undefined,
         initializeApp: manager_1.initializeApp.bind(manager_1),
         IOS_SDK_VERSION: "5.5.0",
-        Promise: Promise.class,
+        Promise: Promise,
         WEBJS_SDK_VERSION: "5.5.0",
     };
     window.cordova.addConstructor(function () {
