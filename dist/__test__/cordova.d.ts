@@ -1,1 +1,6 @@
-export declare const exec: (onSuccess: any, onError: any, pluginName: any, methodName: any, args: any) => void;
+/// <reference types="jest" />
+export declare const exec: jest.Mock<{
+    args: any;
+    methodName: any;
+    pluginName: any;
+}>;
