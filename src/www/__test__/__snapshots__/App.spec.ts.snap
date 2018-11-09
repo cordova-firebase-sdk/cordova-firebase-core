@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`[App] [App.databaseURL option] should throw error if does not point the root reference 1`] = `"Database URL must point to the root of a Firebase Database (not including a child path). "`;
+
+exports[`[App] [App.databaseURL option] should throw error if does not start with https://(projectId).firebaseio.com 1`] = `"Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com"`;
+
+exports[`[App] [App.databaseURL option] should throw error if it is not string 1`] = `"Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com"`;
