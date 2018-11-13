@@ -31,6 +31,19 @@ export class App extends PluginBase {
     }
 
     if (initOptions) {
+      if (initOptions.databaseURL) {
+        if (typeof initOptions.databaseURL !== "string") {
+          throw new Error("Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com");
+        }
+        initOptions.databaseURL = initOptions.databaseURL.toLowerCase();
+        initOptions.databaseURL = initOptions.databaseURL.replace(/\?.+$/, "");
+        if (!/^https:\/\/.+?\.firebaseio.com/.test(initOptions.databaseURL)) {
+          throw new Error("Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com");
+        }
+        if (/firebaseio.com\/.+$/.test(initOptions.databaseURL)) {
+          throw new Error("Database URL must point to the root of a Firebase Database (not including a child path). ");
+        }
+      }
       this._options = {
         apiKey: initOptions.apiKey || null,
         authDomain: initOptions.authDomain || null,

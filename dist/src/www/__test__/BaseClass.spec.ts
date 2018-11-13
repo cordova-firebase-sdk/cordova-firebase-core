@@ -3,7 +3,7 @@ import { BaseClass } from "../BaseClass";
 declare let Promise: any;
 
 describe("BaseClass test", () => {
-
+  
 
   describe("_set()", () => {
     it("'instance.hello' should be 'world'", () => {
@@ -81,6 +81,31 @@ describe("BaseClass test", () => {
         });
 
         instance._trigger("myEvent", 1, 2, 3);
+      }))
+      .then(done);
+    });
+
+    it("should work multiple event listeners for one event.", (done) => {
+      (new Promise((resolve, reject) => {
+        const instance: BaseClass = new BaseClass();
+        const timer: any = setTimeout(reject, 10); // just in case
+        let receiveCnt: number = 0;
+        instance._on("received", () => {
+          receiveCnt++;
+          if (receiveCnt === 3) {
+            resolve();
+          }
+        });
+        instance._one("myEvent", () => {
+          instance._trigger("received");
+        });
+        instance._on("myEvent", () => {
+          instance._trigger("received");
+        });
+
+        instance._trigger("myEvent");
+        instance._trigger("myEvent");
+        instance._trigger("myEvent");
       }))
       .then(done);
     });

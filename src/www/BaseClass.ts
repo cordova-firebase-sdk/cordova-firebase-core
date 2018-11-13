@@ -202,22 +202,25 @@ export class BaseClass {
    * @returnss Removed event listeners.
    */
   public _off(eventName?: string, listener?: (...parameters: Array<any>) => void): Array<(...parameters: Array<any>) => void> {
+
+
+
     let removedListeners: Array<(...parameters: Array<any>) => void> = [];
-    if (!eventName && !listener) {
-      const eventNames: Array<string> = Object.keys(this.subs);
-      eventNames.forEach((name: string) => {
-        removedListeners = Array.prototype.concat.apply(removedListeners, this.subs[name]);
-        delete this.subs[name];
-      });
-    } else if (eventName) {
-      removedListeners = Array.prototype.concat.apply(removedListeners, this.subs[eventName]);
-      delete this.subs[eventName];
-    } else {
+    if (eventName && listener) {
       const index: number = this.subs[eventName].indexOf(listener);
       if (index !== -1) {
         this.subs[eventName].splice(index, 1);
         removedListeners.push(listener);
       }
+    } else if (eventName) {
+      removedListeners = Array.prototype.concat.apply(removedListeners, this.subs[eventName]);
+      delete this.subs[eventName];
+    } else {
+      const eventNames: Array<string> = Object.keys(this.subs);
+      eventNames.forEach((name: string) => {
+        removedListeners = Array.prototype.concat.apply(removedListeners, this.subs[name]);
+        delete this.subs[name];
+      });
     }
 
     return removedListeners;

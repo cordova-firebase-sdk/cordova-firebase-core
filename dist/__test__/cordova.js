@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.exec = jest.fn(function (onSuccess, onError, pluginName, methodName, args) {
     // Insert tiny delay
-    console.log("--->hello");
     setTimeout(function () {
         onSuccess(args);
     }, 5);

@@ -195,23 +195,23 @@ var BaseClass = /** @class */ (function () {
     BaseClass.prototype._off = function (eventName, listener) {
         var _this = this;
         var removedListeners = [];
-        if (!eventName && !listener) {
-            var eventNames = Object.keys(this.subs);
-            eventNames.forEach(function (name) {
-                removedListeners = Array.prototype.concat.apply(removedListeners, _this.subs[name]);
-                delete _this.subs[name];
-            });
+        if (eventName && listener) {
+            var index = this.subs[eventName].indexOf(listener);
+            if (index !== -1) {
+                this.subs[eventName].splice(index, 1);
+                removedListeners.push(listener);
+            }
         }
         else if (eventName) {
             removedListeners = Array.prototype.concat.apply(removedListeners, this.subs[eventName]);
             delete this.subs[eventName];
         }
         else {
-            var index = this.subs[eventName].indexOf(listener);
-            if (index !== -1) {
-                this.subs[eventName].splice(index, 1);
-                removedListeners.push(listener);
-            }
+            var eventNames = Object.keys(this.subs);
+            eventNames.forEach(function (name) {
+                removedListeners = Array.prototype.concat.apply(removedListeners, _this.subs[name]);
+                delete _this.subs[name];
+            });
         }
         return removedListeners;
     };
