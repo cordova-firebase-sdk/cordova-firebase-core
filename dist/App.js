@@ -153,7 +153,7 @@ var SecretAppManager = /** @class */ (function () {
 }());
 if (window.cordova && window.cordova.version) {
     var manager_1 = new SecretAppManager();
-    var firebaseNS_1 = {
+    var firebaseNS = {
         apps: manager_1.apps,
         ANDROID_SDK_VERSION: "5.5.0",
         database: undefined,
@@ -162,25 +162,23 @@ if (window.cordova && window.cordova.version) {
         Promise: Promise,
         WEBJS_SDK_VERSION: "5.5.0",
     };
-    window.cordova.addConstructor(function () {
-        window.plugin = window.plugin || {};
-        // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
-        if (!window.plugin.firebase) {
-            Object.defineProperty(window.plugin, "firebase", {
-                value: firebaseNS_1,
-            });
-            Object.defineProperty(window.plugin.firebase, "app", {
-                value: function (name) {
-                    name = name || "[DEFAULT]";
-                    var app = manager_1._apps[name];
-                    if (app) {
-                        return app;
-                    }
-                    else {
-                        throw new Error("Default app has been not initialized.");
-                    }
-                },
-            });
-        }
-    });
+    window.plugin = window.plugin || {};
+    // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
+    if (!window.plugin.firebase) {
+        Object.defineProperty(window.plugin, "firebase", {
+            value: firebaseNS,
+        });
+        Object.defineProperty(window.plugin.firebase, "app", {
+            value: function (name) {
+                name = name || "[DEFAULT]";
+                var app = manager_1._apps[name];
+                if (app) {
+                    return app;
+                }
+                else {
+                    throw new Error("Default app has been not initialized.");
+                }
+            },
+        });
+    }
 }

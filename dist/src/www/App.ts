@@ -3,8 +3,6 @@ import { isInitialized } from "./common";
 import { IAppInitializeOptions } from "./IAppInitializeOptions";
 import { PluginBase } from "./PluginBase";
 
-declare let window: any;
-
 export class App extends PluginBase {
 
   public name: string = "[DEFAULT]";
@@ -84,17 +82,17 @@ export class App extends PluginBase {
     // Load `cordova-firebase-database.Database` module if not yet.
     let database: any;
     if (isInitialized("plugin.firebase.database") &&
-      typeof window.plugin.firebase.database === "function") {
-      database = window.plugin.firebase.database(this, options);
+      typeof (window as any).plugin.firebase.database === "function") {
+      database = (window as any).plugin.firebase.database(this, options);
     } else {
       const moduleName: string = "cordova-firebase-database";
 
-      if (!window.cordova.define.moduleMap[moduleName + ".Database"]) {
+      if (!(window as any).cordova.define.moduleMap[moduleName + ".Database"]) {
         // cordova-firebase-database is not installed.
         throw new Error(moduleName + " plugin is required");
       }
       cordova.require(moduleName + ".Database");
-      database = window.plugin.firebase.database(this, options);
+      database = (window as any).plugin.firebase.database(this, options);
     }
 
     // Waits if native side of FirebaseAppPlugin is not ready yet.
@@ -142,7 +140,7 @@ class SecretAppManager {
     return app;
   }
 }
-if (window.cordova && window.cordova.version) {
+if ((window as any).cordova && (window as any).cordova.version) {
   const manager: SecretAppManager = new SecretAppManager();
 
   const firebaseNS: any = {
@@ -161,24 +159,22 @@ if (window.cordova && window.cordova.version) {
     WEBJS_SDK_VERSION: "5.5.0",
   };
 
-  window.cordova.addConstructor(() => {
-    window.plugin = window.plugin || {};
-    // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
-    if (!window.plugin.firebase) {
-      Object.defineProperty(window.plugin, "firebase", {
-        value: firebaseNS,
-      });
-      Object.defineProperty(window.plugin.firebase, "app", {
-        value: (name?: string): App => {
-          name = name || "[DEFAULT]";
-          const app: App = manager._apps[name];
-          if (app) {
-            return app;
-          } else {
-            throw new Error("Default app has been not initialized.");
-          }
-        },
-      });
-    }
-  });
+  (window as any).plugin = (window as any).plugin || {};
+  // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
+  if (!(window as any).plugin.firebase) {
+    Object.defineProperty((window as any).plugin, "firebase", {
+      value: firebaseNS,
+    });
+    Object.defineProperty((window as any).plugin.firebase, "app", {
+      value: (name?: string): App => {
+        name = name || "[DEFAULT]";
+        const app: App = manager._apps[name];
+        if (app) {
+          return app;
+        } else {
+          throw new Error("Default app has been not initialized.");
+        }
+      },
+    });
+  }
 }

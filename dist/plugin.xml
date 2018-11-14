@@ -5,11 +5,14 @@
     <runs />
   </js-module>
 
-  <js-module name="App" src="App.js" />
+  <js-module name="App" src="App.js">
+    <runs/>
+  </js-module>
   <js-module name="common" src="common.js" />
   <js-module name="BaseClass" src="BaseClass.js" />
   <js-module name="BaseArrayClass" src="BaseArrayClass.js" />
   <js-module name="PluginBase" src="PluginBase.js" />
+  <js-module name="lz-string" src="lz-string.js" />
 
   <dependency id="es6-promise-plugin" />
 

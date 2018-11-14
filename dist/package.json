@@ -11,18 +11,23 @@
     ]
   },
   "scripts": {
-    "build": "rm -rf dist/* && npm run tslint && npx tsc && cp -R package.json plugin.xml README.md src dist/",
+    "build": "rm -rf dist/* && npm run test && npx tsc && cp -R package.json plugin.xml README.md src dist/",
     "test": "npm run jest",
     "tslint": "npx tslint --project .",
     "jest": "npm run tslint && npx jest",
     "jest:watch": "npx jest --watch",
     "tsdoc": "npx typedoc --options typedoc.js src/www "
   },
-  "main": "./src/www/index.js",
-  "typings": "./src/www/index.d.ts",
+  "main": "index.js",
+  "typings": "index.d.ts",
   "files": [
-    "src/",
-    "js/"
+    "src/android/",
+    "src/ios/",
+    "*.d.ts",
+    "*.js",
+    "plugin.xml",
+    "package.json",
+    "README.md"
   ],
   "keywords": [
     "ecosystem:cordova",
