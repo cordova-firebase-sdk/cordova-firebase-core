@@ -20,6 +20,14 @@ describe("[BaseArrayClass]", () => {
         }, 3 * Math.random());
       })).resolves.toEqual(initArray);
     });
+    it("should return empty array if no item", () => {
+      const _: BaseArrayClass = new BaseArrayClass();
+      expect(_._mapSeries((item: string, idx: number, next: (result: string) => void) => {
+        setTimeout(() => {
+          next(item);
+        }, 3 * Math.random());
+      })).resolves.toHaveLength(0);
+    });
   });
 
 
@@ -32,6 +40,14 @@ describe("[BaseArrayClass]", () => {
           next(item);
         }, 3 * Math.random());
       })).resolves.toEqual(initArray);
+    });
+    it("should return empty array if no item", () => {
+      const _: BaseArrayClass = new BaseArrayClass();
+      expect(_._mapAsync((item: string, idx: number, next: (result: string) => void) => {
+        setTimeout(() => {
+          next(item);
+        }, 3 * Math.random());
+      })).resolves.toHaveLength(0);
     });
   });
 
@@ -58,6 +74,19 @@ describe("[BaseArrayClass]", () => {
         }, 10 * Math.random());
       }).then(() => {
         expect(i).toBe(3);
+        done();
+      });
+    });
+    it("should execute `iteratee` 0 times", (done) => {
+      const _: BaseArrayClass = new BaseArrayClass();
+      let i: number = 0;
+      _._forEachAsync((item: string, idx: number, next: (result: string) => void) => {
+        setTimeout(() => {
+          i++;
+          next(item);
+        }, 10 * Math.random());
+      }).then(() => {
+        expect(i).toBe(0);
         done();
       });
     });
@@ -88,6 +117,17 @@ describe("[BaseArrayClass]", () => {
         done();
       });
     });
+    it("should return empty array if no item", (done) => {
+      const _: BaseArrayClass = new BaseArrayClass();
+      _._filterAsync((item: number, idx: number, next: (result: boolean) => void) => {
+        setTimeout(() => {
+          next(item % 2 === 0);
+        }, 3 * Math.random());
+      }).then((results: number[]) => {
+        expect(results).toHaveLength(0);
+        done();
+      });
+    });
   });
 
   describe("_filter()", () => {
@@ -101,6 +141,12 @@ describe("[BaseArrayClass]", () => {
       expect(_._filter((item: {condition: boolean}): boolean => {
         return item.condition === true;
       })).toHaveLength(2);
+    });
+    it("should return empty array if no item", () => {
+      const _: BaseArrayClass = new BaseArrayClass();
+      expect(_._filter((item: {condition: boolean}): boolean => {
+        return item.condition === true;
+      })).toHaveLength(0);
     });
   });
 
