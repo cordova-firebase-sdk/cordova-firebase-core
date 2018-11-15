@@ -141,7 +141,7 @@ describe("[App.database]", () => {
     const database = app.database("https://dummy.firebaseio.com/users/test");
     database._one("fireAppReady", () => {
       setTimeout(() => {
-        expect(database._isReady).toBe(true);
+        expect(database.isReady).toBe(true);
         done();
       }, 3);
     });

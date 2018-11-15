@@ -1,6 +1,6 @@
-import { BaseClass } from "../BaseClass";
+import { PluginBase } from "../PluginBase";
 
-export class Database extends BaseClass {
+export class Database extends PluginBase {
   public app: any;
 
   public _isReady: boolean;
@@ -8,7 +8,7 @@ export class Database extends BaseClass {
   private _options: any;
 
   constructor(app: any, options?: any) {
-    super();
+    super("Database");
     this.app = app;
     this._options = options;
     this._one("fireAppReady", () => {
