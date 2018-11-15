@@ -178,9 +178,9 @@ export class BaseClass {
 
     this.subs[eventName] = this.subs[eventName] || [];
     this.subs[eventName].push({
+      deleted: false,
       listener,
       once: false,
-      deleted: false,
     });
   }
 
@@ -232,9 +232,9 @@ export class BaseClass {
    */
   public _off(eventName?: string, listener?: (...parameters: Array<any>) => void): Array<(...parameters: Array<any>) => void> {
 
-    let removedListeners: Array<(...parameters: Array<any>) => void> = [];
+    const removedListeners: Array<(...parameters: Array<any>) => void> = [];
     if (eventName && listener) {
-      for (let i : number = 0; i < this.subs[eventName].length; i++) {
+      for (let i: number = 0; i < this.subs[eventName].length; i++) {
         if (this.subs[eventName][i].listener === listener) {
           this.subs[eventName][i].deleted = true;
           this.subs[eventName].splice(i, 1);
@@ -284,9 +284,9 @@ export class BaseClass {
 
     this.subs[eventName] = this.subs[eventName] || [];
     this.subs[eventName].push({
+      deleted: false,
       listener,
       once: true,
-      deleted: false,
     });
   }
 

@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "rm -rf dist/* && npx tsc && cp -R package.json plugin.xml README.md src dist/",
-    "test": "npm run tslint && npm run jest",
+    "test": "npm run tslint && npm run jest -- --coverage",
     "tslint": "npx tslint --project .",
     "jest": "npx tsc --project tsconfig_for_jest.json && npx jest",
     "jest:watch": "npx jest --watch",

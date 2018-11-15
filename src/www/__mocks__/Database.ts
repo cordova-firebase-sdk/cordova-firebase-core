@@ -2,8 +2,10 @@ import { BaseClass } from "../BaseClass";
 
 export class Database extends BaseClass {
   public app: any;
-  private _options: any;
+
   public _isReady: boolean;
+
+  private _options: any;
 
   constructor(app: any, options?: any) {
     super();
@@ -13,4 +15,4 @@ export class Database extends BaseClass {
       this._isReady = true;
     });
   }
-};
+}
