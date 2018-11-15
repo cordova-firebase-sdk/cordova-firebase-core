@@ -97,7 +97,6 @@ export class App extends PluginBase {
       database._trigger("fireAppReady");
     } else {
       this._one("ready", () => {
-        console.log("--->here");
         database._trigger("fireAppReady");
       });
     }
