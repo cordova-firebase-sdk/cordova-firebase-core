@@ -29,3 +29,4 @@ if (window.cordova.version) {
     var indexModue = { exports: exports };
     window.cordova.define.moduleMap["cordova-firebase-core/index"] = indexModue;
 }
+//# sourceMappingURL=index.js.map

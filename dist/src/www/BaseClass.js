@@ -16,6 +16,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var BaseClass = /** @class */ (function () {
     function BaseClass() {
         /**
+         * Unique hash string.
+         */
+        this.hashCode = Math.floor(Date.now() * Math.random()).toString();
+        /**
          * @hidden
          * Keep values with keys.
          */
@@ -27,9 +31,9 @@ var BaseClass = /** @class */ (function () {
         this.subs = {};
         /**
          * @hidden
-         * Keep listeners with event name.
+         * Keep bindTo information
          */
-        this.hashCode = Math.floor(Date.now() * Math.random());
+        this._bindToDic = {};
     }
     // /**
     //  * Create new BaseClass
@@ -70,10 +74,20 @@ var BaseClass = /** @class */ (function () {
      * @param [noNotify] - Sets `true` if you don't want to fire `(key)_changed` event.
      */
     BaseClass.prototype._set = function (key, value, noNotify) {
+        var _this = this;
         var prev = this.vars[key];
         this.vars[key] = value;
-        if (!noNotify && prev !== value) {
-            this._trigger(key + "_changed", prev, value, key);
+        if (prev !== value) {
+            if (this._bindToDic[key]) {
+                var keys = Object.keys(this._bindToDic[key]);
+                keys.forEach(function (hashCode) {
+                    var info = _this._bindToDic[key][hashCode];
+                    info.target._set(info.targetKey, value);
+                });
+            }
+            if (!noNotify) {
+                this._trigger(key + "_changed", prev, value, key);
+            }
         }
     };
     /**
@@ -95,9 +109,11 @@ var BaseClass = /** @class */ (function () {
         // when bind the value for the first time only.
         // (Same behaviour as Google Maps JavaScript v3)
         target._set(targetKey, this.vars[key], noNotify);
-        this._on(key + "_changed", function (oldValue, newValue) {
-            target._set(targetKey, newValue);
-        });
+        this._bindToDic[key] = this._bindToDic[key] || {};
+        this._bindToDic[key][target.hashCode] = {
+            target: target,
+            targetKey: targetKey,
+        };
     };
     /**
      * Fire an event named `eventName` with `parameters`.
@@ -111,18 +127,26 @@ var BaseClass = /** @class */ (function () {
      */
     BaseClass.prototype._trigger = function (eventName) {
         var _this = this;
-        var parameters = [];
+        var params = [];
         for (var _i = 1; _i < arguments.length; _i++) {
-            parameters[_i - 1] = arguments[_i];
+            params[_i - 1] = arguments[_i];
         }
         if (!eventName || !this.subs[eventName]) {
             return;
         }
         var listeners = this.subs[eventName];
-        listeners.forEach(function (subscriber) {
-            if (subscriber) {
-                subscriber.apply(_this, parameters);
+        listeners.forEach(function (info) {
+            if (info && info.listener && !info.deleted) {
+                if (info.once) {
+                    info.deleted = true;
+                }
+                Promise.resolve().then(function () {
+                    info.listener.apply(_this, params);
+                });
             }
+        });
+        this.subs[eventName] = this.subs[eventName].filter(function (info) {
+            return info && info.listener && !info.deleted;
         });
     };
     /**
@@ -144,7 +168,11 @@ var BaseClass = /** @class */ (function () {
             throw new Error("Listener must be a function");
         }
         this.subs[eventName] = this.subs[eventName] || [];
-        this.subs[eventName].push(listener);
+        this.subs[eventName].push({
+            deleted: false,
+            listener: listener,
+            once: false,
+        });
     };
     /**
      * Remove event listener
@@ -196,20 +224,29 @@ var BaseClass = /** @class */ (function () {
         var _this = this;
         var removedListeners = [];
         if (eventName && listener) {
-            var index = this.subs[eventName].indexOf(listener);
-            if (index !== -1) {
-                this.subs[eventName].splice(index, 1);
-                removedListeners.push(listener);
+            for (var i = 0; i < this.subs[eventName].length; i++) {
+                if (this.subs[eventName][i].listener === listener) {
+                    this.subs[eventName][i].deleted = true;
+                    this.subs[eventName].splice(i, 1);
+                    removedListeners.push(listener);
+                    break;
+                }
             }
         }
         else if (eventName) {
-            removedListeners = Array.prototype.concat.apply(removedListeners, this.subs[eventName]);
+            this.subs[eventName].forEach(function (info) {
+                info.delete = true;
+                removedListeners.push(info.listener);
+            });
             delete this.subs[eventName];
         }
         else {
             var eventNames = Object.keys(this.subs);
             eventNames.forEach(function (name) {
-                removedListeners = Array.prototype.concat.apply(removedListeners, _this.subs[name]);
+                _this.subs[name].forEach(function (info) {
+                    info.delete = true;
+                    removedListeners.push(info.listener);
+                });
                 delete _this.subs[name];
             });
         }
@@ -231,20 +268,17 @@ var BaseClass = /** @class */ (function () {
      * @param listener - event listener
      */
     BaseClass.prototype._one = function (eventName, listener) {
-        var _this = this;
         if (!listener || typeof listener !== "function") {
             throw new Error("Listener must be a function");
         }
-        var callback = function () {
-            var parameters = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                parameters[_i] = arguments[_i];
-            }
-            _this._off(eventName, callback);
-            listener.apply(_this, parameters);
-        };
-        this._on(eventName, callback);
+        this.subs[eventName] = this.subs[eventName] || [];
+        this.subs[eventName].push({
+            deleted: false,
+            listener: listener,
+            once: true,
+        });
     };
     return BaseClass;
 }());
 exports.BaseClass = BaseClass;
+//# sourceMappingURL=BaseClass.js.map

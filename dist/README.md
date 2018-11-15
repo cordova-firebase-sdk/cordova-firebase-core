@@ -1,9 +1,5 @@
 # cordova-firebase-core [![](https://travis-ci.org/cordova-firebase-sdk/cordova-firebase-core.svg?branch=master)](https://travis-ci.org/cordova-firebase-sdk/cordova-firebase-core)
 
-
-**THIS PLUGIN IS NOT READY TO SHIP. DO NOT USE THIS PLUGIN IN YOUR APP YET.**
-
-
 ## Description
 
   This plugin provides wrapper API of `firebase.app` namespace.

@@ -39,9 +39,6 @@ var App = /** @class */ (function (_super) {
         }
         if (initOptions) {
             if (initOptions.databaseURL) {
-                if (typeof initOptions.databaseURL !== "string") {
-                    throw new Error("Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com");
-                }
                 initOptions.databaseURL = initOptions.databaseURL.toLowerCase();
                 initOptions.databaseURL = initOptions.databaseURL.replace(/\?.+$/, "");
                 if (!/^https:\/\/.+?\.firebaseio.com/.test(initOptions.databaseURL)) {
@@ -120,17 +117,17 @@ var App = /** @class */ (function (_super) {
 exports.App = App;
 var SecretAppManager = /** @class */ (function () {
     function SecretAppManager() {
-        this._apps = {};
+        this._buffer = {};
     }
     Object.defineProperty(SecretAppManager.prototype, "apps", {
         get: function () {
             var _this = this;
-            var keys = Object.keys(this._apps);
-            var apps = [];
+            var keys = Object.keys(this._buffer);
+            var results = [];
             keys.forEach(function (key) {
-                apps.push(_this._apps[key]);
+                results.push(_this._buffer[key]);
             });
-            return apps;
+            return results;
         },
         enumerable: true,
         configurable: true
@@ -142,43 +139,49 @@ var SecretAppManager = /** @class */ (function () {
      */
     SecretAppManager.prototype.initializeApp = function (initOptions, name) {
         name = name || "[DEFAULT]";
-        if (name in this._apps) {
+        if (name in this._buffer) {
             throw new Error("Name '" + name + "' application has been already existed.");
         }
+        if (typeof name !== "string") {
+            throw new Error("Name must be string.");
+        }
         var app = new App(name, initOptions);
-        this._apps[name] = app;
+        this._buffer[name] = app;
         return app;
     };
     return SecretAppManager;
 }());
 if (window.cordova && window.cordova.version) {
     var manager_1 = new SecretAppManager();
-    var firebaseNS = {
-        apps: manager_1.apps,
-        ANDROID_SDK_VERSION: "5.5.0",
-        database: undefined,
-        initializeApp: manager_1.initializeApp.bind(manager_1),
-        IOS_SDK_VERSION: "5.5.0",
-        Promise: Promise,
-        WEBJS_SDK_VERSION: "5.5.0",
-    };
+    Object.defineProperty(manager_1, "Promise", {
+        value: Promise,
+    });
+    Object.defineProperty(manager_1, "SDK_VERSION", {
+        value: "5.5.0",
+    });
     window.plugin = window.plugin || {};
     // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
     if (!window.plugin.firebase) {
         Object.defineProperty(window.plugin, "firebase", {
-            value: firebaseNS,
+            value: manager_1,
         });
         Object.defineProperty(window.plugin.firebase, "app", {
             value: function (name) {
                 name = name || "[DEFAULT]";
-                var app = manager_1._apps[name];
-                if (app) {
-                    return app;
+                var results = manager_1.apps.filter(function (app) {
+                    return app.name === name;
+                });
+                if (results.length === 1) {
+                    return results[0];
+                }
+                else if (name === "[DEFAULT]") {
+                    throw new Error("Default app has been not initialized.");
                 }
                 else {
-                    throw new Error("Default app has been not initialized.");
+                    throw new Error("App '" + name + "' has been not initialized.");
                 }
             },
         });
     }
 }
+//# sourceMappingURL=App.js.map

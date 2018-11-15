@@ -30,9 +30,6 @@ export class App extends PluginBase {
 
     if (initOptions) {
       if (initOptions.databaseURL) {
-        if (typeof initOptions.databaseURL !== "string") {
-          throw new Error("Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com");
-        }
         initOptions.databaseURL = initOptions.databaseURL.toLowerCase();
         initOptions.databaseURL = initOptions.databaseURL.replace(/\?.+$/, "");
         if (!/^https:\/\/.+?\.firebaseio.com/.test(initOptions.databaseURL)) {
@@ -114,16 +111,20 @@ export class App extends PluginBase {
 
 class SecretAppManager {
 
-  public get apps(): Array<App> {
-    const keys: Array<string> = Object.keys(this._apps);
-    const apps: Array<App> = [];
-    keys.forEach((key: string) => {
-      apps.push(this._apps[key]);
-    });
-    return apps;
+  private _buffer: any;
+
+  constructor() {
+    this._buffer = {};
   }
 
-  public _apps: any = {};
+  public get apps(): Array<App> {
+    const keys: Array<string> = Object.keys(this._buffer);
+    const results: Array<App> = [];
+    keys.forEach((key: string) => {
+      results.push(this._buffer[key]);
+    });
+    return results;
+  }
 
   /**
    * @param initOptions - Application initialize options
@@ -132,47 +133,45 @@ class SecretAppManager {
    */
   public initializeApp(initOptions: IAppInitializeOptions, name?: string): App {
     name = name || "[DEFAULT]";
-    if (name in this._apps) {
+    if (name in this._buffer) {
       throw new Error("Name '" + name + "' application has been already existed.");
     }
+    if (typeof name !== "string") {
+      throw new Error("Name must be string.");
+    }
     const app: App = new App(name, initOptions);
-    this._apps[name] = app;
+    this._buffer[name] = app;
     return app;
   }
 }
 if ((window as any).cordova && (window as any).cordova.version) {
   const manager: SecretAppManager = new SecretAppManager();
 
-  const firebaseNS: any = {
-    apps: manager.apps,
-
-    ANDROID_SDK_VERSION: "5.5.0",
-
-    database: undefined,
-
-    initializeApp: manager.initializeApp.bind(manager),
-
-    IOS_SDK_VERSION: "5.5.0",
-
-    Promise,
-
-    WEBJS_SDK_VERSION: "5.5.0",
-  };
+  Object.defineProperty(manager, "Promise", {
+    value: Promise,
+  });
+  Object.defineProperty(manager, "SDK_VERSION", {
+    value: "5.5.0", // Web JS SDK Version
+  });
 
   (window as any).plugin = (window as any).plugin || {};
   // (window as any).plugin.firebase = (window as any).plugin.firebase || {};
   if (!(window as any).plugin.firebase) {
     Object.defineProperty((window as any).plugin, "firebase", {
-      value: firebaseNS,
+      value: manager,
     });
     Object.defineProperty((window as any).plugin.firebase, "app", {
       value: (name?: string): App => {
         name = name || "[DEFAULT]";
-        const app: App = manager._apps[name];
-        if (app) {
-          return app;
-        } else {
+        const results: Array<App> = manager.apps.filter((app: App): boolean => {
+          return app.name === name;
+        });
+        if (results.length === 1) {
+          return results[0];
+        } else if (name === "[DEFAULT]") {
           throw new Error("Default app has been not initialized.");
+        } else {
+          throw new Error("App '" + name + "' has been not initialized.");
         }
       },
     });

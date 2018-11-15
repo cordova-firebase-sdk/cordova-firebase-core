@@ -45,3 +45,4 @@ var PluginBase = /** @class */ (function (_super) {
     return PluginBase;
 }(BaseClass_1.BaseClass));
 exports.PluginBase = PluginBase;
+//# sourceMappingURL=PluginBase.js.map

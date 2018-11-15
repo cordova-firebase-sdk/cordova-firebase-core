@@ -196,9 +196,6 @@ export class BaseArrayClass extends BaseClass {
    */
   public _indexOf(item: any, searchElement?: number): number {
     searchElement = searchElement === undefined || searchElement === null ? 0 : searchElement;
-    if (typeof searchElement !== "number") {
-      throw new Error("searchElement must be a number");
-    }
     if (searchElement < 0) {
       throw new Error("searchElement must be over number than 0");
     }

@@ -49,3 +49,4 @@ var FirebaseAppPlugin = /** @class */ (function (_super) {
     return FirebaseAppPlugin;
 }(BaseClass_1.BaseClass));
 exports.FirebaseAppPlugin = FirebaseAppPlugin;
+//# sourceMappingURL=FirebaseAppPlugin.js.map

@@ -13,20 +13,24 @@
  */
 export declare class BaseClass {
     /**
+     * Unique hash string.
+     */
+    readonly hashCode: string;
+    /**
      * @hidden
      * Keep values with keys.
      */
-    protected vars: any;
+    private vars;
     /**
      * @hidden
      * Keep listeners with event name.
      */
-    protected subs: any;
+    private subs;
     /**
      * @hidden
-     * Keep listeners with event name.
+     * Keep bindTo information
      */
-    protected readonly hashCode: number;
+    private _bindToDic;
     /**
      * Removes all key-value stores
      */
@@ -75,7 +79,7 @@ export declare class BaseClass {
      * @param eventName - event name
      * @param parameters - any data
      */
-    _trigger(eventName: string, ...parameters: Array<any>): void;
+    _trigger(eventName: string, ...params: Array<any>): void;
     /**
      * Catch the events fired with {@link BaseClass._trigger | the _trigger() method}.
      *

@@ -11,3 +11,4 @@ exports.exec = jest.fn(function (onSuccess, onError, pluginName, methodName, arg
         pluginName: pluginName,
     };
 });
+//# sourceMappingURL=cordova.js.map

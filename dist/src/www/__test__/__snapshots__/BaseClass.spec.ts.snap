@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BaseClass test _on() should throw Error if listener is null. 1`] = `"Listener must be a function"`;
+
+exports[`BaseClass test _one() should throw Error if listener is null. 1`] = `"Listener must be a function"`;

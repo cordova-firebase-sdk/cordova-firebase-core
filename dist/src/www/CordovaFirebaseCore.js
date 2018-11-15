@@ -76,3 +76,4 @@ if (window.cordova && window.cordova.version) {
         proxy.add("CordovaFirebaseCore", dummyObj);
     })();
 }
+//# sourceMappingURL=CordovaFirebaseCore.js.map

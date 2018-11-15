@@ -24,7 +24,3 @@ export interface IloadJsPromiseOptions {
  * @returns Promise<void>
  */
 export declare const loadJsPromise: (options: IloadJsPromiseOptions) => Promise<void>;
-/**
- * @hidden
- */
-export declare const nextTick: (fn: any) => void;

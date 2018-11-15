@@ -55,9 +55,4 @@ exports.loadJsPromise = function (options) {
         }
     });
 };
-/**
- * @hidden
- */
-exports.nextTick = function (fn) {
-    Promise.resolve().then(fn);
-};
+//# sourceMappingURL=common.js.map

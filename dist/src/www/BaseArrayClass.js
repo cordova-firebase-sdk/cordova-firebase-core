@@ -202,9 +202,6 @@ var BaseArrayClass = /** @class */ (function (_super) {
      */
     BaseArrayClass.prototype._indexOf = function (item, searchElement) {
         searchElement = searchElement === undefined || searchElement === null ? 0 : searchElement;
-        if (typeof searchElement !== "number") {
-            throw new Error("searchElement must be a number");
-        }
         if (searchElement < 0) {
             throw new Error("searchElement must be over number than 0");
         }
@@ -374,3 +371,4 @@ var BaseArrayClass = /** @class */ (function (_super) {
     return BaseArrayClass;
 }(BaseClass_1.BaseClass));
 exports.BaseArrayClass = BaseArrayClass;
+//# sourceMappingURL=BaseArrayClass.js.map
