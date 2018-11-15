@@ -15,11 +15,22 @@ module.exports = {
     "node"
   ],
   globals: {
-    cordova: {},
     firebase: {},
-    window: {},
+    window: {
+      cordova: {
+        define: {
+          moduleMap: {}
+        },
+        platformId: "browser",
+        version: "8.0.0"
+      }
+    },
   },
+  coveragePathIgnorePatterns: [
+    "src/www/common.ts"
+  ],
   moduleNameMapper: {
-    "^cordova$": "<rootDir>/src/www/__test__/cordova"
-  }
+    "common$": "<rootDir>/src/www/__mocks__/common"
+  },
+  preset: "jest-puppeteer"
 };

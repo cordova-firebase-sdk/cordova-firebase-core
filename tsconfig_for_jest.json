@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "files": [
+    "src/www/common.ts"
+  ],
+  "compilerOptions": {
+    "outDir": "src/www/__test__/common.mock/"
+  }
+}

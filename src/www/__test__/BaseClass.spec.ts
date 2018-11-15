@@ -3,13 +3,25 @@ import { BaseClass } from "../BaseClass";
 declare let Promise: any;
 
 describe("BaseClass test", () => {
-  
+
 
   describe("_set()", () => {
     it("'instance.hello' should be 'world'", () => {
       const instance: BaseClass = new BaseClass();
       instance._set("hello", "world");
       expect(instance._get("hello")).toEqual("world");
+    });
+    it("'instance.hello' should not be fired 'hello_changed' event if noNotify is true", (done) => {
+      const instance: BaseClass = new BaseClass();
+      let triggered: boolean = false;
+      instance._one("hello_changed", (): void => {
+        triggered = true;
+      });
+      instance._set("hello", "world", true);
+      setTimeout((): void => {
+        expect(triggered).toBe(false);
+        done();
+      }, 3);
     });
   });
 
@@ -22,6 +34,15 @@ describe("BaseClass test", () => {
       instanceA._set("hello", "world");
       expect(instanceA._get("hello")).toEqual("world");
       expect(instanceB._get("anotherHello")).toEqual("world");
+    });
+    it("'instanceB.hello' should be the same as 'instanceA.hello'", () => {
+      const instanceA: BaseClass = new BaseClass();
+      const instanceB: BaseClass = new BaseClass();
+
+      instanceA._bindTo("hello", instanceB);
+      instanceA._set("hello", "world");
+      expect(instanceA._get("hello")).toEqual("world");
+      expect(instanceB._get("hello")).toEqual("world");
     });
   });
 
@@ -38,6 +59,40 @@ describe("BaseClass test", () => {
 
       instance._set("hello", "Aloha");
       instance._set("hello", "こんにちは");
+    });
+    it("'instance._one()' should receive 'hello_changed' event even mulitple definition.", (done) => {
+      const instance: BaseClass = new BaseClass();
+      instance._set("hello", "world");
+
+      let count: number = 0;
+      const listener = (prevValue: string, newValue: string) => {
+        count++;
+      };
+      setTimeout(() => {
+        expect(count).toBe(2);
+        done();
+      }, 100);
+      instance._on("received", listener);
+
+      instance._one("hello_changed", (prevValue: string, newValue: string) => {
+        expect(prevValue).toEqual("world");
+        expect(newValue).toEqual("Aloha");
+        instance._trigger("received");
+      });
+      instance._one("hello_changed", (prevValue: string, newValue: string) => {
+        expect(prevValue).toEqual("world");
+        expect(newValue).toEqual("Aloha");
+        instance._trigger("received");
+      });
+
+      instance._set("hello", "Aloha");
+      instance._set("hello", "こんにちは");
+    });
+    it("should throw Error if listener is null.", () => {
+      expect(() => {
+        const instance: BaseClass = new BaseClass();
+        instance._one("event", null);
+      }).toThrowErrorMatchingSnapshot();
     });
   });
 
@@ -109,6 +164,14 @@ describe("BaseClass test", () => {
       }))
       .then(done);
     });
+
+    it("should throw Error if listener is null.", () => {
+      expect(() => {
+        const instance: BaseClass = new BaseClass();
+        instance._on("event", null);
+      }).toThrowErrorMatchingSnapshot();
+    });
+
   });
 
   describe("_off()", () => {
@@ -118,14 +181,13 @@ describe("BaseClass test", () => {
         let count: number = 0;
         const listener = () => {
           count++;
-          instance._off("hello_changed", listener);
         };
         instance._on("hello_changed", listener);
+        instance._set("hello", "world");
 
+        instance._off("hello_changed", listener);
+        instance._set("hello", "JavaScript");
 
-        for (let i: number = 0; i < 10; i++) {
-          instance._set("hello", i);
-        }
         setTimeout(() => {
           resolve(count);
         }, 3);
@@ -136,7 +198,7 @@ describe("BaseClass test", () => {
       });
     });
 
-    it("'instance._off()' should remove all event listeners.", (done) => {
+    it("'instance._off(\"eventName\")' should remove all event listeners.", (done) => {
       (new Promise((resolve, reject) => {
         const instance: BaseClass = new BaseClass();
         let called: boolean = false;
@@ -150,6 +212,34 @@ describe("BaseClass test", () => {
         instance._on("myEvent", dummyListener);
         instance._off("myEvent");
         instance._trigger("myEvent");
+
+        setTimeout(() => {
+          resolve(called);
+        }, 3);
+
+      }))
+      .then((answer: boolean) => {
+        expect(answer).toBe(false);
+        done();
+      });
+    });
+    it("'instance._off()' should remove all event listeners of all events.", (done) => {
+      (new Promise((resolve, reject) => {
+        const instance: BaseClass = new BaseClass();
+        let called: boolean = false;
+        const dummyListener = () => {
+          called = true;
+        };
+
+        instance._on("myEvent1", dummyListener);
+        instance._on("myEvent2", dummyListener);
+        instance._on("myEvent3", dummyListener);
+        instance._on("myEvent4", dummyListener);
+        instance._off();
+        instance._trigger("myEvent1");
+        instance._trigger("myEvent2");
+        instance._trigger("myEvent3");
+        instance._trigger("myEvent4");
 
         setTimeout(() => {
           resolve(called);
@@ -181,6 +271,20 @@ describe("BaseClass test", () => {
         expect(receivedData[1]).toBe(1);
         done();
       });
+    });
+    it("should use internal queue if multiple events are triggered quickly.", (done) => {
+      let cnt: number = 0;
+      const instance: BaseClass = new BaseClass();
+      instance._on("event", () => {
+        cnt++;
+        if (cnt === 100) {
+          expect(cnt).toBe(100);
+          done();
+        }
+      });
+      for (let i: number = 0; i < 100; i++) {
+        instance._trigger("event");
+      }
     });
   });
 

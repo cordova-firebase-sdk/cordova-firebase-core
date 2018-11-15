@@ -7,8 +7,7 @@
     "baseUrl": "src/www/",
     "target": "es5",
     "declaration": true,
-    "lib": ["es5", "es6", "DOM"],
-    "sourceMap": true,
+    "lib": ["es5", "es6", "DOM"]
   },
   "exclude": [
     "dist/**",

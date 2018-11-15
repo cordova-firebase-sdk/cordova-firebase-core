@@ -15,22 +15,27 @@
 export class BaseClass {
 
   /**
+   * Unique hash string.
+   */
+  public readonly hashCode: string = Math.floor(Date.now() * Math.random()).toString();
+
+  /**
    * @hidden
    * Keep values with keys.
    */
-  protected vars: any = {};
+  private vars: any = {};
 
   /**
    * @hidden
    * Keep listeners with event name.
    */
-  protected subs: any = {};
+  private subs: any = {};
 
   /**
    * @hidden
-   * Keep listeners with event name.
+   * Keep bindTo information
    */
-  protected readonly hashCode: number = Math.floor(Date.now() * Math.random());
+  private _bindToDic = {};
 
   // /**
   //  * Create new BaseClass
@@ -78,8 +83,17 @@ export class BaseClass {
 
     this.vars[key] = value;
 
-    if (!noNotify && prev !== value) {
-      this._trigger(key + "_changed", prev, value, key);
+    if (prev !== value) {
+      if (this._bindToDic[key]) {
+        const keys: Array<string> = Object.keys(this._bindToDic[key]);
+        keys.forEach((hashCode: any): void => {
+            const info: any = this._bindToDic[key][hashCode];
+            info.target._set(info.targetKey, value);
+        });
+      }
+      if (!noNotify) {
+        this._trigger(key + "_changed", prev, value, key);
+      }
     }
   }
 
@@ -104,9 +118,12 @@ export class BaseClass {
     // (Same behaviour as Google Maps JavaScript v3)
     target._set(targetKey, this.vars[key], noNotify);
 
-    this._on(key + "_changed", (oldValue: any, newValue: any) => {
-      target._set(targetKey, newValue);
-    });
+
+    this._bindToDic[key] = this._bindToDic[key] || {};
+    this._bindToDic[key][target.hashCode] = {
+      target,
+      targetKey,
+    };
   }
 
   /**
@@ -119,16 +136,24 @@ export class BaseClass {
    * @param eventName - event name
    * @param parameters - any data
    */
-  public _trigger(eventName: string, ...parameters: Array<any>): void {
+  public _trigger(eventName: string, ...params: Array<any>): void {
     if (!eventName || !this.subs[eventName]) {
       return;
     }
 
-    const listeners: Array<(...parameters: Array<any>) => void> = this.subs[eventName];
-    listeners.forEach((subscriber: (...parameters: Array<any>) => void) => {
-      if (subscriber) {
-        subscriber.apply(this, parameters);
+    const listeners: Array<any> = this.subs[eventName];
+    listeners.forEach((info: any): void => {
+      if (info && info.listener && !info.deleted) {
+        if (info.once) {
+          info.deleted = true;
+        }
+        Promise.resolve().then(() => {
+          info.listener.apply(this, params);
+        });
       }
+    });
+    this.subs[eventName] = this.subs[eventName].filter((info: any): any => {
+      return info && info.listener && !info.deleted;
     });
   }
 
@@ -152,7 +177,11 @@ export class BaseClass {
     }
 
     this.subs[eventName] = this.subs[eventName] || [];
-    this.subs[eventName].push(listener);
+    this.subs[eventName].push({
+      listener,
+      once: false,
+      deleted: false,
+    });
   }
 
   /**
@@ -203,22 +232,29 @@ export class BaseClass {
    */
   public _off(eventName?: string, listener?: (...parameters: Array<any>) => void): Array<(...parameters: Array<any>) => void> {
 
-
-
     let removedListeners: Array<(...parameters: Array<any>) => void> = [];
     if (eventName && listener) {
-      const index: number = this.subs[eventName].indexOf(listener);
-      if (index !== -1) {
-        this.subs[eventName].splice(index, 1);
-        removedListeners.push(listener);
+      for (let i : number = 0; i < this.subs[eventName].length; i++) {
+        if (this.subs[eventName][i].listener === listener) {
+          this.subs[eventName][i].deleted = true;
+          this.subs[eventName].splice(i, 1);
+          removedListeners.push(listener);
+          break;
+        }
       }
     } else if (eventName) {
-      removedListeners = Array.prototype.concat.apply(removedListeners, this.subs[eventName]);
+      this.subs[eventName].forEach((info: any): void => {
+        info.delete = true;
+        removedListeners.push(info.listener);
+      });
       delete this.subs[eventName];
     } else {
       const eventNames: Array<string> = Object.keys(this.subs);
       eventNames.forEach((name: string) => {
-        removedListeners = Array.prototype.concat.apply(removedListeners, this.subs[name]);
+        this.subs[name].forEach((info: any): void => {
+          info.delete = true;
+          removedListeners.push(info.listener);
+        });
         delete this.subs[name];
       });
     }
@@ -246,11 +282,12 @@ export class BaseClass {
       throw new Error("Listener must be a function");
     }
 
-    const callback: ((...parameters: Array<any>) => void) = (...parameters: Array<any>) => {
-      this._off(eventName, callback);
-      listener.apply(this, parameters);
-    };
-    this._on(eventName, callback);
+    this.subs[eventName] = this.subs[eventName] || [];
+    this.subs[eventName].push({
+      listener,
+      once: true,
+      deleted: false,
+    });
   }
 
 }

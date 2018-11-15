@@ -3,3 +3,5 @@ docs/
 !src/www/
 package-lock.json
 .DS_Store
+coverage/
+src/www/__test__/common.mock/src

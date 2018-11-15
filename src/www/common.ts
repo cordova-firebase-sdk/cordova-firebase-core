@@ -67,10 +67,3 @@ export const loadJsPromise = (options: IloadJsPromiseOptions): Promise<void> => 
     }
   });
 };
-
-/**
- * @hidden
- */
-export const nextTick = (fn) => {
-  Promise.resolve().then(fn);
-};
