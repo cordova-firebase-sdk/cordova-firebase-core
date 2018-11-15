@@ -162,6 +162,14 @@ describe("[BaseArrayClass]", () => {
       const _: BaseArrayClass = new BaseArrayClass(initArray);
       expect(_._indexOf("World", 2)).toBe(3);
     });
+
+    it("should throw Error if searchElement is negative number", () => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      expect(() => {
+        _._indexOf("World", -1)
+      }).toThrowErrorMatchingSnapshot();
+    });
   });
 
   describe("_empty()", () => {
@@ -181,6 +189,20 @@ describe("[BaseArrayClass]", () => {
       _._push("HelloWorld");
       expect(_._getAt(3)).toEqual("HelloWorld");
     });
+
+    it("should not 'insert_at' event if noNotify is true", (done) => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      let triggered: boolean = false;
+      _._one("insert_at", () => {
+        triggered = true;
+      });
+      _._push("test", true);
+      setTimeout(() => {
+        expect(triggered).toBe(false);
+        done();
+      }, 3);
+    });
   });
 
   describe("_insertAt()", () => {
@@ -189,6 +211,28 @@ describe("[BaseArrayClass]", () => {
       const _: BaseArrayClass = new BaseArrayClass(initArray);
       _._insertAt(1, "Aloha");
       expect(_._getArray()).toEqual(["Hello", "Aloha", "World", "test"]);
+    });
+
+    it("should throw Error if index is negative number", () => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      expect(() => {
+        _._insertAt(-1, "World");
+      }).toThrowErrorMatchingSnapshot();
+    });
+
+    it("should not 'insert_at' event if noNotify is true", (done) => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      let triggered: boolean = false;
+      _._one("insert_at", () => {
+        triggered = true;
+      });
+      _._insertAt(0, "test", true);
+      setTimeout(() => {
+        expect(triggered).toBe(false);
+        done();
+      }, 3);
     });
   });
 
@@ -207,6 +251,23 @@ describe("[BaseArrayClass]", () => {
       const _: BaseArrayClass = new BaseArrayClass(initArray);
       expect(_._getAt(1)).toEqual("World");
     });
+
+    it("should throw Error if index is negative number", () => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      expect(() => {
+        _._getAt(-1);
+      }).toThrowErrorMatchingSnapshot();
+    });
+
+    it("should throw Error if index is bigger number than length", () => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      expect(() => {
+        _._getAt(100);
+      }).toThrowErrorMatchingSnapshot();
+    });
+
   });
 
   describe("_setAt()", () => {
@@ -215,6 +276,35 @@ describe("[BaseArrayClass]", () => {
       const _: BaseArrayClass = new BaseArrayClass(initArray);
       _._setAt(0, "Aloha");
       expect(_._getAt(0)).toEqual("Aloha");
+    });
+
+    it("should throw Error if index is negative number", () => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      expect(() => {
+        _._setAt(-1, "hello");
+      }).toThrowErrorMatchingSnapshot();
+    });
+
+    it("should expand length if insert value at bigger position than length", () => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      _._setAt(10, "test"); // array[10] = "test"
+      expect(_._getLength()).toBe(11);
+    });
+
+    it("should not 'set_at' event if noNotify is true", (done) => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      let triggered: boolean = false;
+      _._one("set_at", () => {
+        triggered = true;
+      });
+      _._setAt(0, "test", true);
+      setTimeout(() => {
+        expect(triggered).toBe(false);
+        done();
+      }, 3);
     });
   });
 
@@ -226,6 +316,36 @@ describe("[BaseArrayClass]", () => {
       expect(_._getAt(1)).toEqual("test");
       expect(_._getLength()).toBe(2);
     });
+
+    it("should throw Error if index is negative number", () => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      expect(() => {
+        _._removeAt(-1);
+      }).toThrowErrorMatchingSnapshot();
+    });
+
+    it("should throw Error if index is bigger number than length", () => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      expect(() => {
+        _._removeAt(10);
+      }).toThrowErrorMatchingSnapshot();
+    });
+
+    it("should not 'remove_at' event if noNotify is true", (done) => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      let triggered: boolean = false;
+      _._one("remove_at", () => {
+        triggered = true;
+      });
+      _._removeAt(0, true);
+      setTimeout(() => {
+        expect(triggered).toBe(false);
+        done();
+      }, 3);
+    });
   });
 
   describe("_pop()", () => {
@@ -234,6 +354,20 @@ describe("[BaseArrayClass]", () => {
       const _: BaseArrayClass = new BaseArrayClass(initArray);
       expect(_._pop()).toEqual("test");
       expect(_._getLength()).toBe(2);
+    });
+
+    it("should not 'remove_at' event if noNotify is true", (done) => {
+      const initArray: string[] = ["Hello", "World", "test", "World"];
+      const _: BaseArrayClass = new BaseArrayClass(initArray);
+      let triggered: boolean = false;
+      _._one("remove_at", () => {
+        triggered = true;
+      });
+      _._pop(true);
+      setTimeout(() => {
+        expect(triggered).toBe(false);
+        done();
+      }, 3);
     });
   });
 

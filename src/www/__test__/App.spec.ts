@@ -1,6 +1,7 @@
 import { App } from "../App";
 import * as common from "../__mocks__/common";
 import { Database } from "../__mocks__/Database";
+import { exec } from "../__mocks__/cordova";
 
 describe("[App]", () => {
 
@@ -146,5 +147,31 @@ describe("[App.database]", () => {
       }, 3);
     });
     app._trigger("ready");
+  });
+  it("should fire 'fireAppReady' if app has been already initialized", (done) => {
+    common.isInitialized.mockImplementationOnce(() => {
+      return true;
+    });
+    (window as any).plugin.firebase.database = jest.fn((app, options) => {
+      return new Database(app, options);
+    });
+    exec.mockReset();
+    exec.mockImplementationOnce((onSuccess) => {
+      onSuccess();
+    });
+
+    const app: App = new App("hello", {
+      apiKey: "(YOUR API KEY)",
+      databaseURL: "https://dummy.firebaseio.com",
+    });
+
+    setTimeout(() => {
+      expect(app.isReady).toBe(true);
+      const database = app.database("https://dummy.firebaseio.com/users/test");
+      setTimeout(() => {
+        expect(database.isReady).toBe(true);
+        done();
+      }, 5);
+    }, 10);
   });
 });

@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`[BaseArrayClass] _getAt() should throw Error if index is bigger number than length 1`] = `"index must be lower number than 4"`;
+
+exports[`[BaseArrayClass] _getAt() should throw Error if index is negative number 1`] = `"index must be over number than 0"`;
+
+exports[`[BaseArrayClass] _indexOf() should throw Error if searchElement is negative number 1`] = `"searchElement must be over number than 0"`;
+
+exports[`[BaseArrayClass] _insertAt() should throw Error if index is negative number 1`] = `"index must be over number than 0"`;
+
+exports[`[BaseArrayClass] _removeAt() should throw Error if index is bigger number than length 1`] = `"index must be lower number than 4"`;
+
+exports[`[BaseArrayClass] _removeAt() should throw Error if index is negative number 1`] = `"index must be over number than 0"`;
+
+exports[`[BaseArrayClass] _setAt() should throw Error if index is negative number 1`] = `"index must be over number than 0"`;
