@@ -10,7 +10,7 @@ __export(require("./BaseClass"));
 __export(require("./common"));
 __export(require("./PluginBase"));
 __export(require("./lz-string"));
-if (window.cordova.version) {
+if (window.cordova && window.cordova.version && !window.jest) {
     var _orgRequire_1 = window.cordova.require;
     window.cordova.require = function (id) {
         id = id.replace(/([a-z0-9])\/([a-z0-9])/i, "$1.$2");

@@ -3,7 +3,7 @@
     "module": "commonjs",
     "moduleResolution": "classic",
     "outDir": "dist/",
-    "rootDir": ".",
+    "rootDir": "src/www/",
     "baseUrl": "src/www/",
     "target": "es5",
     "declaration": true,
@@ -12,7 +12,8 @@
   },
   "exclude": [
     "dist/**",
-    "src/**/__test__/*.spec.ts",
+    "src/www/__test__/**",
+    "src/www/__mocks__/**",
     "node_modules/**"
   ],
   "rules": {

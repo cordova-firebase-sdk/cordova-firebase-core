@@ -9,7 +9,7 @@ export * from "./lz-string";
 
 // Registers modules as part of cordova plugin
 declare let window: any;
-if (window.cordova.version) {
+if (window.cordova && window.cordova.version && !window.jest) {
   const _orgRequire = window.cordova.require;
   window.cordova.require = (id: string): void => {
     id = id.replace(/([a-z0-9])\/([a-z0-9])/i, "$1.$2");
